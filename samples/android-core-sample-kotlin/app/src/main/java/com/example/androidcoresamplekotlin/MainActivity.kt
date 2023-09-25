@@ -6,7 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
-import io.dyte.core.DyteAndroidClientBuilder
+import io.dyte.core.DyteMeetingBuilder
 import io.dyte.core.listeners.DyteMeetingRoomEventsListener
 import io.dyte.core.listeners.DyteParticipantEventsListener
 import io.dyte.core.models.DyteJoinedMeetingParticipant
@@ -91,14 +91,9 @@ class MainActivity : AppCompatActivity() {
 
     val dyteMeetingInfo =
       DyteMeetingInfoV2(authToken = AUTH_TOKEN, enableAudio = false, enableVideo = false)
-    val meeting = DyteAndroidClientBuilder.build(this)
+    val meeting = DyteMeetingBuilder.build(this)
     meeting.addMeetingRoomEventsListener(meetingEventListener)
     meeting.addParticipantEventsListener(participantEventsListener)
-
-    val chat = meeting.chat
-    val roomParticipants = meeting.participants
-    val polls = meeting.polls
-    val localUser = meeting.localUser
 
     btnInitMeeting.setOnClickListener {
       meeting.init(dyteMeetingInfo)
