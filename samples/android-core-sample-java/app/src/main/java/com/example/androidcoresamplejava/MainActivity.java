@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import io.dyte.core.DyteMeetingBuilder;
 import io.dyte.core.DyteMobileClient;
 import io.dyte.core.listeners.DyteMeetingRoomEventsListener;
+import io.dyte.core.models.ActiveTabType;
 import io.dyte.core.models.DyteMeetingInfoV2;
 
 public class MainActivity extends AppCompatActivity {
@@ -105,6 +106,11 @@ public class MainActivity extends AppCompatActivity {
       }
 
       @Override public void onConnectedToMeetingRoom() {
+
+      }
+
+      @Override
+      public void onActiveTabUpdate(@NonNull String s, @NonNull ActiveTabType activeTabType) {
 
       }
     };
