@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_rounded_corners_8dp"
+    android:backgroundTint="#191919"
+    >
+  <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/imageview_leave_meeting_icon"
+      android:layout_width="82dp"
+      android:layout_height="82dp"
+      android:layout_marginTop="30dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/ic_leave_class"
+      />
+
+  <TextView
+      android:id="@+id/textview_leave_meeting_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:gravity="center"
+      android:text="Are you sure you want to leave this live class?"
+      android:textColor="#FFFFFF"
+      android:textSize="16sp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/imageview_leave_meeting_icon"
+      />
+
+  <dyte.io.uikit.view.button.DyteButton
+      android:id="@+id/button_leave_meeting_cancel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="20dp"
+      android:layout_marginEnd="24dp"
+      android:layout_marginTop="62dp"
+      android:backgroundTint="#3B3B3B"
+      android:padding="16dp"
+      android:text="Stay in class"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/button_leave_meeting_confirm"
+      app:layout_constraintHorizontal_chainStyle="packed"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/textview_leave_meeting_title"
+      app:layout_constraintVertical_bias="0"
+      app:dyte_btn_variant="secondary"
+      />
+
+  <dyte.io.uikit.view.button.DyteButton
+      android:id="@+id/button_leave_meeting_confirm"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:backgroundTint="#E85858"
+      android:padding="16dp"
+      android:text="Leave class"
+      app:layout_constraintBaseline_toBaselineOf="@id/button_leave_meeting_cancel"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@id/button_leave_meeting_cancel"
+      app:dyte_btn_variant="danger"
+      />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

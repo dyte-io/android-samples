@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ActiveSpeakerWebinarFragment"
+    tools:ignore="MissingDefaultResource"
+    >
+
+    <LinearLayout
+        android:id="@+id/meeting_header"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:background="#80D3D3D3"
+        android:elevation="2dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:srcCompat="@drawable/ic_arrow_back_24"
+            android:tint="#FFFFFF" />
+
+        <Space
+            android:layout_width="12dp"
+            android:layout_height="wrap_content" />
+
+        <dyte.io.uikit.view.DyteMeetingTitleView
+            android:id="@+id/meeting_title_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <io.dyte.activespeakerui.sample.views.MeetingView
+        android:id="@+id/meeting_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#FF0000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/meeting_controls"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <dyte.io.uikit.view.controlbars.DyteControlBarView
+        android:id="@+id/meeting_controls"
+        android:layout_width="48dp"
+        android:layout_height="0dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingVertical="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="#141414"
+        >
+        <io.dyte.activespeakerui.sample.views.NotifyingControlBarButton
+            android:id="@+id/button_chat_toggle"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:dyte_cbb_icon="@drawable/ic_chat"
+            app:dyte_cbb_showText="false"
+            tools:background="#141414"
+            tools:textColor="@color/white"
+            />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"
+            />
+
+        <io.dyte.activespeakerui.sample.views.NotifyingControlBarButton
+            android:id="@+id/button_polls_toggle"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:dyte_cbb_icon="@drawable/ic_poll"
+            app:dyte_cbb_showText="false"
+            tools:background="#141414"
+            tools:textColor="@color/white"
+            />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+        <io.dyte.activespeakerui.sample.widget.RaiseHandButton
+            android:id="@+id/button_raise_hand"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:dyte_cbb_icon="@drawable/ic_raise_hand_32"
+            app:dyte_cbb_showText="false"
+            tools:background="#141414"
+            tools:textColor="@color/white"
+            />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"
+            />
+
+        <dyte.io.uikit.view.controlbarbuttons.DyteControlBarButton
+            android:id="@+id/button_settings"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            app:dyte_cbb_icon="@drawable/ic_settings"
+            app:dyte_cbb_showText="false"
+            tools:background="#141414"
+            tools:textColor="@color/white"
+            />
+    </dyte.io.uikit.view.controlbars.DyteControlBarView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
