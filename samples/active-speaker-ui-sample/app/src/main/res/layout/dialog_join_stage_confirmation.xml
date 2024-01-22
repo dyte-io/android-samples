@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bg_rounded_corners_8dp"
+    android:backgroundTint="#191919"
+    android:paddingHorizontal="24dp"
+    android:paddingVertical="16dp"
+    >
+
+  <androidx.appcompat.widget.AppCompatTextView
+      android:id="@+id/textview_join_stage_confirmation_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Raise a Hand"
+      android:textColor="#FFFFFF"
+      android:textSize="20sp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      />
+
+  <dyte.io.uikit.view.participanttile.DyteParticipantTileView
+      android:id="@+id/participanttileview_join_stage_confirmation"
+      android:layout_width="224dp"
+      android:layout_height="128dp"
+      android:layout_marginTop="16dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/textview_join_stage_confirmation_title"
+      />
+
+  <dyte.io.uikit.view.controlbarbuttons.DyteCameraToggleButton
+      android:id="@+id/cameratoggle_join_stage_confirmation"
+      android:layout_width="32dp"
+      android:layout_height="32dp"
+      android:layout_marginBottom="8dp"
+      android:layout_marginEnd="8dp"
+      android:elevation="2dp"
+      app:layout_constraintBottom_toBottomOf="@id/participanttileview_join_stage_confirmation"
+      app:layout_constraintEnd_toEndOf="@id/participanttileview_join_stage_confirmation"
+      app:dyte_cbb_showText="false"
+      tools:background="#2C2C2C"
+      tools:textColor="@color/white"
+      tools:visibility="visible"
+      />
+
+  <dyte.io.uikit.view.controlbarbuttons.DyteMicToggleButton
+      android:id="@+id/mictoggle_join_stage_confirmation"
+      android:layout_width="32dp"
+      android:layout_height="32dp"
+      android:layout_marginBottom="8dp"
+      android:layout_marginEnd="8dp"
+      android:elevation="2dp"
+      app:layout_constraintBottom_toBottomOf="@id/participanttileview_join_stage_confirmation"
+      app:layout_constraintEnd_toStartOf="@id/cameratoggle_join_stage_confirmation"
+      app:dyte_cbb_showText="false"
+      tools:background="#2C2C2C"
+      tools:textColor="@color/white"
+      tools:visibility="visible"
+      />
+
+  <androidx.appcompat.widget.AppCompatTextView
+      android:id="@+id/textview_join_stage_confirmation_description"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:gravity="center"
+      android:text="You are about to join stage. Your Video and audio will be visible as previewed here to all the participants"
+      android:textColor="#FFFFFF"
+      android:textSize="14sp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/participanttileview_join_stage_confirmation"
+      />
+
+  <dyte.io.uikit.view.button.DyteButton
+      android:id="@+id/button_join_stage_confirmation_cancel"
+      android:layout_width="120dp"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="24dp"
+      android:layout_marginTop="16dp"
+      android:backgroundTint="#3B3B3B"
+      android:padding="16dp"
+      android:text="Cancel"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/button_join_stage_confirmation_confirm"
+      app:layout_constraintHorizontal_chainStyle="packed"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/textview_join_stage_confirmation_description"
+      app:layout_constraintVertical_bias="0"
+      app:dyte_btn_variant="secondary"
+      />
+
+  <dyte.io.uikit.view.button.DyteButton
+      android:id="@+id/button_join_stage_confirmation_confirm"
+      android:layout_width="120dp"
+      android:layout_height="wrap_content"
+      android:padding="16dp"
+      android:text="Raise Hand"
+      app:layout_constraintBaseline_toBaselineOf="@id/button_join_stage_confirmation_cancel"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@id/button_join_stage_confirmation_cancel"
+      app:dyte_btn_variant="primary"
+      />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
