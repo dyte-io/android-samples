@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import dyte.io.uikit.DyteUIKitBuilder
+import dyte.io.uikit.screens.settings.DyteSettingsFragment
 import dyte.io.uikit.token.DyteDesignTokens
 import dyte.io.uikit.view.DyteMeetingTitleView
 import dyte.io.uikit.view.controlbarbuttons.DyteControlBarButton
@@ -163,6 +164,8 @@ class ActiveSpeakerWebinarFragment : Fragment() {
     // TODO: Open Settings dialog
     private fun onSettingsButtonClicked() {
         Log.d(TAG, "SettingsButtonClicked")
+        val dyteSettingsFragment = DyteSettingsFragment()
+        dyteSettingsFragment.show(childFragmentManager, ActiveSpeakerWebinarFragment::class.java.simpleName)
     }
 
     private fun showJoinStageConfirmationDialog() {

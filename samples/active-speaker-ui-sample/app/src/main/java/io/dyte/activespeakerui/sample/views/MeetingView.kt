@@ -13,6 +13,7 @@ import dyte.io.uikit.view.dytegrid.DyteGridViewV2
 import dyte.io.uikit.view.participanttile.DyteParticipantTileView
 import io.dyte.activespeakerui.sample.R
 import io.dyte.activespeakerui.sample.utils.ViewUtils.gone
+import io.dyte.core.controllers.StageStatus
 import io.dyte.core.listeners.DyteParticipantEventsListener
 import io.dyte.core.models.DyteJoinedMeetingParticipant
 import io.dyte.core.observability.DyteLogger
@@ -182,6 +183,7 @@ class MeetingView : ConstraintLayout {
     private fun refreshFloatingPeer() {
         val pinnedPeer = meeting.participants.pinned
         val activeSpeaker = meeting.participants.activeSpeaker
+        val self = meeting.localUser
         if (pinnedPeer != null) {
             DyteLogger.info("MeetingView::refreshFloatingPeer::showing pinned")
             dptvFloting.visible()
@@ -190,6 +192,10 @@ class MeetingView : ConstraintLayout {
             DyteLogger.info("MeetingView::refreshFloatingPeer::showing active")
             dptvFloting.visible()
             dptvFloting.activate(activeSpeaker)
+        } else if(self.stageStatus == StageStatus.ON_STAGE) {
+            DyteLogger.info("MeetingView::refreshFloatingPeer::showing self")
+            dptvFloting.visible()
+            dptvFloting.activate(self)
         } else {
             DyteLogger.info("MeetingView::refreshFloatingPeer::none in floating")
             dptvFloting.gone()
