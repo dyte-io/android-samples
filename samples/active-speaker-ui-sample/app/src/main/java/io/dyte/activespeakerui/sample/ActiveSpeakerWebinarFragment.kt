@@ -155,17 +155,13 @@ class ActiveSpeakerWebinarFragment : Fragment() {
         pollsToggleButton.notificationCount = 0
     }
 
-    // TODO: Implement Raise hand feature
-    private fun onRaiseHandButtonClicked() {
-        Log.d(TAG, "RaiseHandButtonClicked")
-        showJoinStageConfirmationDialog()
-    }
-
-    // TODO: Open Settings dialog
     private fun onSettingsButtonClicked() {
         Log.d(TAG, "SettingsButtonClicked")
         val dyteSettingsFragment = DyteSettingsFragment()
-        dyteSettingsFragment.show(childFragmentManager, ActiveSpeakerWebinarFragment::class.java.simpleName)
+        dyteSettingsFragment.show(
+            childFragmentManager,
+            ActiveSpeakerWebinarFragment::class.java.simpleName
+        )
     }
 
     private fun showJoinStageConfirmationDialog() {
