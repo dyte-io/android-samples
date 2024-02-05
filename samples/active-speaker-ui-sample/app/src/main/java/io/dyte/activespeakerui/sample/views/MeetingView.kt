@@ -59,6 +59,7 @@ class MeetingView : ConstraintLayout {
             super.onScreenSharesUpdated()
             DyteLogger.info("MeetingView::onScreenSharesUpdated::")
             refreshGrid()
+            dgvGrid.refresh(true)
         }
     }
 
@@ -123,6 +124,9 @@ class MeetingView : ConstraintLayout {
             }
             clLeftbar.gone()
         }
+        clLeftbar.post {
+            dgvGrid.refresh(true)
+        }
     }
 
     fun togglePollsWindow(supportFragmentManager: FragmentManager) {
@@ -144,6 +148,9 @@ class MeetingView : ConstraintLayout {
                     .commit()
             }
             clLeftbar.gone()
+        }
+        clLeftbar.post {
+            dgvGrid.refresh(true)
         }
     }
 
