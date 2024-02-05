@@ -2,6 +2,7 @@ package io.dyte.activespeakerui.sample
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import androidx.activity.OnBackPressedCallback
@@ -16,13 +17,12 @@ import dyte.io.uikit.screens.setup.DyteSetupFragment
 import dyte.io.uikit.screens.webinar.DyteWebinarFragment
 import dyte.io.uikit.utils.Utils.showToast
 import dyte.io.uikit.view.DyteErrorView
-import dyte.io.uikit.view.DyteJoinStageDialog
 import dyte.io.uikit.view.DyteLoaderView
+import io.dyte.activespeakerui.sample.utils.DialogUtils.setWidthToScreenPercentage
+import io.dyte.activespeakerui.sample.utils.ViewUtils.getOrientation
+import io.dyte.activespeakerui.sample.views.LeaveMeetingDialog
 import io.dyte.core.models.DyteMeetingInfoV2
 import io.dyte.core.observability.DyteLogger
-import io.dyte.activespeakerui.sample.utils.ViewUtils.getOrientation
-import io.dyte.activespeakerui.sample.utils.DialogUtils.setWidthToScreenPercentage
-import io.dyte.activespeakerui.sample.views.LeaveMeetingDialog
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -95,14 +95,6 @@ class MainActivity : AppCompatActivity() {
             meetingRoomProgressBar.isVisible = processing
         }
 
-        viewModel.selfStageLiveData.observe(this) { shouldShowDialog ->
-            if (shouldShowDialog) {
-                val stageView = DyteJoinStageDialog(this)
-                stageView.show()
-                stageView.activate(viewModel.meeting)
-            }
-        }
-
         onBackPressedDispatcher.addCallback(onBackPressedCallback)
 
         showLoading()
@@ -110,7 +102,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showError(e: Exception) {
-        DyteLogger.info("MainActivity::showError::")
+        Log.d(TAG, "showError::${e.message}")
         val errorView = DyteErrorView(this)
         container.removeAllViews()
         container.addView(errorView)
@@ -120,32 +112,38 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showLoading() {
-        DyteLogger.info("MainActivity::showLoading::")
+        Log.d(TAG, "showLoading")
         val loaderView = DyteLoaderView(this)
         container.removeAllViews()
         container.addView(loaderView)
     }
 
     private fun showSetupScreen() {
-        DyteLogger.info("MainActivity::showSetupScreen::")
+        Log.d(TAG, "showSetupScreen")
+        // Avoiding addition of DyteSetupFragment again on Activity recreation
+        if (supportFragmentManager.fragments.lastOrNull() is DyteSetupFragment) {
+            return
+        }
+
         container.removeAllViews()
         supportFragmentManager.beginTransaction()
-            .add(R.id.clContainer, DyteSetupFragment())
+            .replace(R.id.clContainer, DyteSetupFragment())
             .commit()
     }
 
     private fun showWebinarFragment() {
-        DyteLogger.info("MainActivity::showWebinarFragment::")
+        Log.d(TAG, "showWebinarFragment")
+
         container.removeAllViews()
         if (getOrientation() == Configuration.ORIENTATION_PORTRAIT) {
-            DyteLogger.info("MainActivity::showWebinarFragment::dyte")
+            Log.d(TAG, "showWebinarFragment::dyte")
             supportFragmentManager.beginTransaction()
-                .add(R.id.clContainer, DyteWebinarFragment())
+                .replace(R.id.clContainer, DyteWebinarFragment())
                 .commit()
         } else {
-            DyteLogger.info("MainActivity::showWebinarFragment::activespeaker")
+            Log.d(TAG, "showWebinarFragment::activespeaker")
             supportFragmentManager.beginTransaction()
-                .add(R.id.clContainer, ActiveSpeakerWebinarFragment())
+                .replace(R.id.clContainer, ActiveSpeakerWebinarFragment())
                 .commit()
         }
     }
@@ -157,10 +155,12 @@ class MainActivity : AppCompatActivity() {
             }
 
             DyteMeetingViewModel.DyteMeetingState.Setup -> {
-                // TODO: Implement custom logic if needed
+                // Client can also implement their custom logic here
+                finish()
             }
 
             else -> {
+                finish()
             }
         }
     }
@@ -178,5 +178,9 @@ class MainActivity : AppCompatActivity() {
         } else {
            leaveClassDialog.setWidthToScreenPercentage(0.60f)
         }
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
     }
 }
