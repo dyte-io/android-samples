@@ -10,8 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import dyte.io.uikit.DyteNotificationConfig
 import dyte.io.uikit.DyteUIKitBuilder
+import dyte.io.uikit.DyteUIKitConfig
 import dyte.io.uikit.DyteUIKitInfo
+import dyte.io.uikit.DyteUiKitNotificationsConfig
 import dyte.io.uikit.screens.DyteMeetingViewModel
 import dyte.io.uikit.screens.setup.DyteSetupFragment
 import dyte.io.uikit.screens.webinar.DyteWebinarFragment
@@ -46,7 +49,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val meetingInfo = DyteMeetingInfoV2(authToken = AUTH_TOKEN)
-        DyteUIKitBuilder.build(DyteUIKitInfo(this, meetingInfo))
+        DyteUIKitBuilder.build(
+            DyteUIKitInfo(
+                activity = this,
+                dyteMeetingInfo = meetingInfo,
+                uiKitConfig = DyteUIKitConfig(
+                    DyteUiKitNotificationsConfig(
+                        participantJoinConfig = DyteNotificationConfig(false),
+                        participantLeaveConfig = DyteNotificationConfig(false)
+                    )
+                )
+            )
+        )
 
         container = findViewById(R.id.clContainer)
         meetingRoomProgressBar = findViewById(R.id.progressbar_meeting_room)
@@ -176,7 +190,7 @@ class MainActivity : AppCompatActivity() {
         if (getOrientation() == Configuration.ORIENTATION_PORTRAIT) {
             leaveClassDialog.setWidthToScreenPercentage(0.90f)
         } else {
-           leaveClassDialog.setWidthToScreenPercentage(0.60f)
+            leaveClassDialog.setWidthToScreenPercentage(0.60f)
         }
     }
 
