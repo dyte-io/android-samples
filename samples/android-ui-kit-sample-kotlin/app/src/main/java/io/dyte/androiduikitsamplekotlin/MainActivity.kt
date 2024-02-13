@@ -16,14 +16,13 @@ class MainActivity : AppCompatActivity() {
 
     btnStartMeeting = findViewById(R.id.btnStartMeeting)
     btnStartMeeting.setOnClickListener {
-      startDyteMeeting(Constants.AUTH_TOKEN, Constants.BASE_URL)
+      startDyteMeeting(MeetingConfig.AUTH_TOKEN)
     }
   }
 
-  private fun startDyteMeeting(authToken: String, baseUrl: String) {
+  private fun startDyteMeeting(authToken: String) {
     val meetingInfo = DyteMeetingInfoV2(
-      authToken = authToken,
-      baseUrl = baseUrl
+      authToken = authToken
     )
     val dyteUIKitInfo = DyteUIKitInfo(
       activity = this,

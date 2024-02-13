@@ -120,14 +120,19 @@ public class MainActivity extends AppCompatActivity {
     btnInit.setOnClickListener(view -> {
       Log.v(TAG, "doing init meeting");
       DyteMeetingInfoV2 dyteMeetingInfoV2 = new DyteMeetingInfoV2(
-          Constants.AUTH_TOKEN,
-          true, true, Constants.BASE_URL);
+          MeetingConfig.AUTH_TOKEN,
+          true, true, MeetingConfig.BASE_URL);
       mobileClient.init(dyteMeetingInfoV2);
     });
 
     btnJoin.setOnClickListener(view -> {
       Log.v(TAG, "doing join meeting");
       mobileClient.joinRoom();
+    });
+
+    btnLeave.setOnClickListener(view -> {
+      Log.v(TAG, "doing leave meeting");
+      mobileClient.leaveRoom();
     });
   }
 }

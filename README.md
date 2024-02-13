@@ -18,9 +18,10 @@ audio/video experience.
 
 Here are the list of available samples at the moment.
 
-1. [Android Core Sample](./samples/default-meeting-ui/)
-2. [Android UI Kit sample with default meetings UI](./samples/with-background-transformer/)
-3. [Android UI Kit sample with custom meetings UI](./samples/audio-room/)
+1. [Android Core Sample in Kotlin](samples/android-core-sample-kotlin)
+2. [Android Core Sample in Java](samples/android-core-sample-java)
+3. [Android UI Kit sample with default meetings UI](samples/android-ui-kit-sample-kotlin)
+4. [Android UI Kit sample with custom meetings UI](samples/active-speaker-ui-sample)
 
 ## Usage
 
@@ -57,4 +58,4 @@ Here are steps to try out the samples:
 git clone git@github.com:dyte-io/android-samples.git
 ```
 
-2. Open the project in your `Android Studio` and paste your `authToken` in `MeetingConfig.kt` file and run the app
+2. Open the project in your `Android Studio` and paste your `authToken` in `MeetingConfig` file and run the app
