@@ -7,7 +7,9 @@
 4. [Trying out a sample](#trying-out-a-sample)
 
 ## Introduction
-Dyte is a technology company specializing in real-time communication solutions. Our products are designed to enable seamless and efficient video interactions in various applications, ranging from virtual meetings to interactive live streaming. The offerings are known for their robust performance, scalability, and ease of integration.
+
+Create immersive live experiences with everything you need - audio/video conferencing, live streaming, and chat - all packed into a single SDK.
+
 
 ## About This Repository
 This repository consists of all the different ways in which you can use Dyte's
