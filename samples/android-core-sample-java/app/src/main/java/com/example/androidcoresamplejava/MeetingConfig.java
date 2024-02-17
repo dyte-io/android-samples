@@ -1,6 +1,6 @@
 package com.example.androidcoresamplejava;
 
-public class Constants {
+public class MeetingConfig {
   static String AUTH_TOKEN = "<ENTER-AUTH-TOKEN-HERE>";
-  static String BASE_URL = "https://api.dyte.io/v2";
+  static String BASE_URL = "dyte.io";
 }

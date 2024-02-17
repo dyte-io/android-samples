@@ -29,8 +29,6 @@ import io.dyte.core.observability.DyteLogger
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-const val AUTH_TOKEN = "<PASTE_AUTH_TOKEN_HERE>"
-
 class MainActivity : AppCompatActivity() {
     private lateinit var container: FrameLayout
 
@@ -48,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val meetingInfo = DyteMeetingInfoV2(authToken = AUTH_TOKEN)
+        val meetingInfo = DyteMeetingInfoV2(authToken = MeetingConfig.AUTH_TOKEN)
         DyteUIKitBuilder.build(
             DyteUIKitInfo(
                 activity = this,
