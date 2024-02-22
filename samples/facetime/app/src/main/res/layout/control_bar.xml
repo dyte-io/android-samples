@@ -1,0 +1,41 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="#131313"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <LinearLayout
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:weightSum="3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <dyte.io.uikit.view.controlbarbuttons.DyteCameraToggleButton
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:id="@+id/dyte_camera_toggle"
+            android:layout_width="0dp"
+            android:layout_height="48dp" />
+
+        <dyte.io.uikit.view.controlbarbuttons.DyteMicToggleButton
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:id="@+id/dyte_mic_toggle"
+            android:layout_width="0dp"
+            android:layout_height="48dp" />
+
+        <dyte.io.uikit.view.controlbarbuttons.DyteLeaveButton
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:id="@+id/dyte_leave"
+            android:layout_width="0dp"
+            android:layout_height="48dp" />
+
+    </LinearLayout>
+
+</merge>
