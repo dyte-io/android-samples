@@ -49,8 +49,6 @@ class MainActivity : AppCompatActivity() {
                     showLoading()
                 }
                 DyteMeetingViewModel.DyteMeetingState.Setup -> {
-                    // we dont wanna show setup screen here, hence joining meeting directly
-//                    viewModel.meeting.participants.disableCache()
                     viewModel.meeting.joinRoom()
                 }
                 DyteMeetingViewModel.DyteMeetingState.GroupCall -> {
