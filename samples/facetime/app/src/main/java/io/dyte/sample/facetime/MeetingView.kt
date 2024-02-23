@@ -80,6 +80,8 @@ class MeetingView : ConstraintLayout {
                     tile.layoutParams = params
                     tile.activate(other)
 
+                    secondaryTile.visible()
+
                     val selfTile = DyteParticipantTileView(context)
                     selfTile.setZOrderMediaOverlay()
                     secondaryTile.removeAllViews()
