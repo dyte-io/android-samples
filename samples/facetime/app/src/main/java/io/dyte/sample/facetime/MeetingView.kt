@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentManager
 import dyte.io.uikit.utils.ViewUtils.gone
 import dyte.io.uikit.utils.ViewUtils.visible
 import dyte.io.uikit.view.participanttile.DyteParticipantTileView
@@ -47,8 +48,8 @@ class MeetingView : ConstraintLayout {
         controlBarView = findViewById(R.id.control_bar)
     }
 
-    fun activate(mobileClient: DyteMobileClient) {
-        controlBarView.activate(mobileClient)
+    fun activate(mobileClient: DyteMobileClient, supportFragmentManager: FragmentManager) {
+        controlBarView.activate(mobileClient, supportFragmentManager)
 
         mobileClient.addParticipantEventsListener(object : DyteParticipantEventsListener {
             override fun onActiveParticipantsChanged(active: List<DyteJoinedMeetingParticipant>) {

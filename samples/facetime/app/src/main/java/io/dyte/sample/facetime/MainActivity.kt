@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
         val meetingView = MeetingView(this)
         clDataContainer.addView(meetingView)
-        meetingView.activate(viewModel.meeting)
+        meetingView.activate(viewModel.meeting, supportFragmentManager)
     }
 
     private fun showLoading() {
