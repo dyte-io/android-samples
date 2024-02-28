@@ -7,7 +7,7 @@
     <LinearLayout
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:weightSum="3"
+        android:weightSum="5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
@@ -16,6 +16,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_weight="1"
+            app:dyte_cbb_showText="false"
+            android:gravity="center"
             android:id="@+id/dyte_camera_toggle"
             android:layout_width="0dp"
             android:layout_height="48dp" />
@@ -25,6 +27,30 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:id="@+id/dyte_mic_toggle"
+            android:layout_width="0dp"
+            app:dyte_cbb_showText="false"
+            android:gravity="center"
+            android:layout_height="48dp" />
+
+        <dyte.io.uikit.view.controlbarbuttons.DyteControlBarButton
+            android:layout_weight="1"
+            app:dyte_cbb_icon="@drawable/ic_chat"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:id="@+id/dyte_chat"
+            android:gravity="center"
+            app:dyte_cbb_showText="false"
+            android:layout_width="0dp"
+            android:layout_height="48dp" />
+
+        <dyte.io.uikit.view.controlbarbuttons.DyteControlBarButton
+            app:dyte_cbb_icon="@drawable/ic_participant"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:dyte_cbb_showText="false"
+            android:gravity="center"
+            android:id="@+id/dyte_participant"
             android:layout_width="0dp"
             android:layout_height="48dp" />
 
