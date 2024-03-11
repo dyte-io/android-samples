@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     val dyteMeetingInfo =
-      DyteMeetingInfoV2(authToken = AUTH_TOKEN, enableAudio = true, enableVideo = true)
+      DyteMeetingInfoV2(authToken = AUTH_TOKEN, enableAudio = true, enableVideo = true, baseUrl = "dyte.io")
     val meeting = DyteMeetingBuilder.build(this)
     meeting.addMeetingRoomEventsListener(meetingEventListener)
     meeting.addParticipantEventsListener(participantEventsListener)
