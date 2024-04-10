@@ -25,7 +25,6 @@ import io.dyte.activespeakerui.sample.utils.DialogUtils.setWidthToScreenPercenta
 import io.dyte.activespeakerui.sample.utils.ViewUtils.getOrientation
 import io.dyte.activespeakerui.sample.views.LeaveMeetingDialog
 import io.dyte.core.models.DyteMeetingInfoV2
-import io.dyte.core.observability.DyteLogger
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -46,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val meetingInfo = DyteMeetingInfoV2(authToken = MeetingConfig.AUTH_TOKEN)
+        val meetingInfo = DyteMeetingInfoV2(authToken = MeetingConfig.AUTH_TOKEN, baseUrl = MeetingConfig.BASE_URL)
         DyteUIKitBuilder.build(
             DyteUIKitInfo(
                 activity = this,
@@ -91,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 else -> {
-                    DyteLogger.info("MainActivity::onCreate::cant process state ${meetingState.javaClass.simpleName}")
+                    println("MainActivity::onCreate::cant process state ${meetingState.javaClass.simpleName}")
                 }
             }
         }
