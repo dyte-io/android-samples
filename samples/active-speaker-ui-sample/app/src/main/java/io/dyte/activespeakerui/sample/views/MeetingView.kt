@@ -16,7 +16,6 @@ import io.dyte.activespeakerui.sample.utils.ViewUtils.gone
 import io.dyte.core.controllers.StageStatus
 import io.dyte.core.listeners.DyteParticipantEventsListener
 import io.dyte.core.models.DyteJoinedMeetingParticipant
-import io.dyte.core.observability.DyteLogger
 
 class MeetingView : ConstraintLayout {
     private lateinit var dptvFloting: DyteParticipantTileView
@@ -33,31 +32,26 @@ class MeetingView : ConstraintLayout {
     private val pinnedUserEventListener = object : DyteParticipantEventsListener {
         override fun onParticipantPinned(participant: DyteJoinedMeetingParticipant) {
             super.onParticipantPinned(participant)
-            DyteLogger.info("MeetingView::onParticipantPinned::")
             refreshGrid()
         }
 
         override fun onParticipantUnpinned(participant: DyteJoinedMeetingParticipant) {
             super.onParticipantUnpinned(participant)
-            DyteLogger.info("MeetingView::onParticipantUnpinned::")
             refreshGrid()
         }
 
         override fun onActiveSpeakerChanged(participant: DyteJoinedMeetingParticipant) {
             super.onActiveSpeakerChanged(participant)
-            DyteLogger.info("MeetingView::onActiveSpeakerChanged::")
             refreshGrid()
         }
 
         override fun onNoActiveSpeaker() {
             super.onNoActiveSpeaker()
-            DyteLogger.info("MeetingView::onNoActiveSpeaker::")
 //            refreshGrid()
         }
 
         override fun onScreenSharesUpdated() {
             super.onScreenSharesUpdated()
-            DyteLogger.info("MeetingView::onScreenSharesUpdated::")
             refreshGrid()
             dgvGrid.refresh(true)
         }
@@ -155,31 +149,26 @@ class MeetingView : ConstraintLayout {
     }
 
     private fun refreshGrid() {
-        DyteLogger.info("MeetingView::refreshGrid::")
         val pinnedPeer = meeting.participants.pinned
         val screenShares = meeting.participants.screenShares
         val plugins = meeting.plugins.active
 
         if (pinnedPeer == null) {
             if (screenShares.isNotEmpty() || plugins.isNotEmpty()) {
-                DyteLogger.info("MeetingView::refreshGrid::custom with no pinned")
                 dgvGrid.visible()
                 dgvGrid.refresh()
                 refreshFloatingPeer()
             } else {
-                DyteLogger.info("MeetingView::refreshGrid::standard with no pinned")
                 dgvGrid.visible()
                 dptvFloting.gone()
                 dgvGrid.refresh()
             }
         } else {
             if (screenShares.isNotEmpty() || plugins.isNotEmpty()) {
-                DyteLogger.info("MeetingView::refreshGrid::custom with pinned")
                 dgvGrid.visible()
                 dgvGrid.refresh()
                 refreshFloatingPeer()
             } else {
-                DyteLogger.info("MeetingView::refreshGrid::standard with pinned")
                 dgvGrid.visible()
                 dptvFloting.gone()
                 dgvGrid.refresh()
@@ -192,19 +181,15 @@ class MeetingView : ConstraintLayout {
         val activeSpeaker = meeting.participants.activeSpeaker
         val self = meeting.localUser
         if (pinnedPeer != null) {
-            DyteLogger.info("MeetingView::refreshFloatingPeer::showing pinned")
             dptvFloting.visible()
             dptvFloting.activate(pinnedPeer)
         } else if(activeSpeaker != null) {
-            DyteLogger.info("MeetingView::refreshFloatingPeer::showing active")
             dptvFloting.visible()
             dptvFloting.activate(activeSpeaker)
         } else if(self.stageStatus == StageStatus.ON_STAGE) {
-            DyteLogger.info("MeetingView::refreshFloatingPeer::showing self")
             dptvFloting.visible()
             dptvFloting.activate(self)
         } else {
-            DyteLogger.info("MeetingView::refreshFloatingPeer::none in floating")
             dptvFloting.gone()
         }
     }
