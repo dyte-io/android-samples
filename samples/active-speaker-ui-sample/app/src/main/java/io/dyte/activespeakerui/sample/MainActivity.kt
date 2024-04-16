@@ -78,6 +78,10 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 DyteMeetingViewModel.DyteMeetingState.Removed -> {
+                    /*
+                    * Note: calling meeting.release is currently compulsory when closing this Activity,
+                    * except when leaving the meeting by tapping the leave button or via the leave dialog.
+                    * */
                     viewModel.meeting.release(
                         onReleaseSuccess = { finish() },
                         onReleaseFailed = { finish() }
@@ -171,7 +175,8 @@ class MainActivity : AppCompatActivity() {
             DyteMeetingViewModel.DyteMeetingState.Setup -> {
                 /*
                 * Client can also implement their custom logic here.
-                * Note: calling meeting.release is currently compulsory if you are closing this Activity.
+                * Note: calling meeting.release is currently compulsory when closing this Activity,
+                * except when leaving the meeting by tapping the leave button or via the leave dialog.
                 * */
                 viewModel.meeting.release(
                     onReleaseSuccess = { finish() },
@@ -180,7 +185,10 @@ class MainActivity : AppCompatActivity() {
             }
 
             else -> {
-                // Note: calling meeting.release is currently compulsory if you are closing this Activity.
+                /*
+                * Note: calling meeting.release is currently compulsory when closing this Activity,
+                * except when leaving the meeting by tapping the leave button or via the leave dialog.
+                * */
                 viewModel.meeting.release(
                     onReleaseSuccess = { finish() },
                     onReleaseFailed = { finish() }
