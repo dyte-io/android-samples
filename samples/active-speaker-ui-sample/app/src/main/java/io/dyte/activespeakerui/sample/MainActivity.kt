@@ -78,7 +78,10 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 DyteMeetingViewModel.DyteMeetingState.Removed -> {
-                    finish()
+                    viewModel.meeting.release(
+                        onReleaseSuccess = { finish() },
+                        onReleaseFailed = { finish() }
+                    )
                 }
 
                 DyteMeetingViewModel.DyteMeetingState.Left -> {
@@ -166,12 +169,22 @@ class MainActivity : AppCompatActivity() {
             }
 
             DyteMeetingViewModel.DyteMeetingState.Setup -> {
-                // Client can also implement their custom logic here
-                finish()
+                /*
+                * Client can also implement their custom logic here.
+                * Note: calling meeting.release is currently compulsory if you are closing this Activity.
+                * */
+                viewModel.meeting.release(
+                    onReleaseSuccess = { finish() },
+                    onReleaseFailed = { finish() }
+                )
             }
 
             else -> {
-                finish()
+                // Note: calling meeting.release is currently compulsory if you are closing this Activity.
+                viewModel.meeting.release(
+                    onReleaseSuccess = { finish() },
+                    onReleaseFailed = { finish() }
+                )
             }
         }
     }
