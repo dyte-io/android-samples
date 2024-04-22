@@ -8,8 +8,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.androidcoresamplejava"
-        minSdk 24
-        targetSdk 33
+        minSdk 21
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -38,7 +38,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    implementation 'io.dyte:core-android:1.32.3'
+    implementation 'io.dyte:core-android:1.34.4'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
