@@ -77,7 +77,8 @@ class MainActivity : AppCompatActivity() {
                     showSetupScreen()
                 }
 
-                DyteMeetingViewModel.DyteMeetingState.Removed -> {
+                DyteMeetingViewModel.DyteMeetingState.Removed,
+                DyteMeetingViewModel.DyteMeetingState.Ended -> {
                     /*
                     * Note: calling meeting.release is currently compulsory when closing this Activity,
                     * except when leaving the meeting by tapping the leave button or via the leave dialog.
