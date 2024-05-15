@@ -13,6 +13,7 @@ import io.dyte.core.DyteMobileClient;
 import io.dyte.core.listeners.DyteMeetingRoomEventsListener;
 import io.dyte.core.models.ActiveTabType;
 import io.dyte.core.models.DyteMeetingInfoV2;
+import io.dyte.core.spotlight.ActiveTab;
 
 public class MainActivity extends AppCompatActivity {
   private String TAG = "MainActivity";
@@ -35,6 +36,16 @@ public class MainActivity extends AppCompatActivity {
 
     DyteMobileClient mobileClient = DyteMeetingBuilder.INSTANCE.build(this);
     DyteMeetingRoomEventsListener meetingEventListener = new DyteMeetingRoomEventsListener() {
+      @Override
+      public void onActiveTabUpdate(@NonNull ActiveTab activeTab) {
+
+      }
+
+      @Override
+      public void onMeetingEnded() {
+
+      }
+
       @Override public void onReconnectingToMeetingRoom() {
 
       }

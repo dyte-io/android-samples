@@ -39,7 +39,7 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
 
-    implementation 'io.dyte:uikit:1.17.3'
+    implementation 'io.dyte:uikit:1.18.0'
 
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
