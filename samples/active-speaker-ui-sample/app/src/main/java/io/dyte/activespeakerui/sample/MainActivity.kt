@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 DyteMeetingViewModel.DyteMeetingState.Setup -> {
+                    setChatLimits()
                     showSetupScreen()
                 }
 
@@ -126,7 +127,10 @@ class MainActivity : AppCompatActivity() {
         container.removeAllViews()
         container.addView(errorView)
         errorView.refresh(e) {
-            finish()
+            viewModel.meeting.release(
+                onReleaseSuccess = { finish() },
+                onReleaseFailed = { finish() }
+            )
         }
     }
 
@@ -211,6 +215,15 @@ class MainActivity : AppCompatActivity() {
         } else {
             leaveClassDialog.setWidthToScreenPercentage(0.60f)
         }
+    }
+
+    private fun setChatLimits() {
+        val meeting = viewModel.meeting
+        meeting.chat.setCharacterLimit(MeetingConfig.CHAT_CHARACTER_LIMIT)
+        meeting.chat.setMessageRateLimit(
+            maxMessages = MeetingConfig.CHAT_MAX_MESSAGES,
+            intervalInSeconds = MeetingConfig.CHAT_MESSAGE_INTERVAL_SECONDS
+        )
     }
 
     companion object {
