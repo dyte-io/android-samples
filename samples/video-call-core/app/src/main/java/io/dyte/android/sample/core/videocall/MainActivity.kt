@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import io.dyte.core.DyteMeetingBuilder
@@ -67,6 +68,43 @@ class MainActivity : AppCompatActivity() {
                 onReleaseFailed = { finish() }
             )
         }
+
+        override fun onMeetingRoomReconnectionFailed() {
+            Log.d(TAG, "onMeetingRoomReconnectionFailed")
+            Toast.makeText(
+                applicationContext,
+                "Reconnection failed, Please try again later",
+                Toast.LENGTH_SHORT
+            ).show()
+            /*
+            * Note: calling meeting.release is currently compulsory when closing the Activity after
+            * reconnection failure.
+            * */
+            meeting?.release(
+                onReleaseSuccess = { finish() },
+                onReleaseFailed = { finish() }
+            )
+        }
+
+        override fun onReconnectedToMeetingRoom() {
+            Log.d(TAG, "onReconnectedToMeetingRoom")
+            Toast.makeText(
+                applicationContext,
+                "Connection restored",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        override fun onReconnectingToMeetingRoom() {
+            Log.d(TAG, "onReconnectingToMeetingRoom")
+            Toast.makeText(
+                applicationContext,
+                "Connection lost. Trying to reconnect...",
+                Toast.LENGTH_SHORT
+            ).show()
+            showProgressBar()
+            disableCallControls()
+        }
     }
 
     private val localUserEventsListener = object : DyteSelfEventsListener {
@@ -88,13 +126,29 @@ class MainActivity : AppCompatActivity() {
 
     private val participantEventsListener = object : DyteParticipantEventsListener {
         override fun onParticipantJoin(participant: DyteJoinedMeetingParticipant) {
-            // Ignoring onParticipantJoin callback for localUser
-            if (participant.id == meeting?.localUser?.id) {
-                return
-            }
+            Log.d(TAG, "onParticipantJoin, ${participant.name}")
+        }
 
-            participant.addParticipantUpdateListener(remoteUserUpdateListener)
-            remoteUser = participant
+        override fun onParticipantLeave(participant: DyteJoinedMeetingParticipant) {
+            Log.d(TAG, "onParticipantLeave, ${participant.name}")
+        }
+
+        override fun onActiveParticipantsChanged(active: List<DyteJoinedMeetingParticipant>) {
+            Log.d(TAG, "onActiveParticipantsChanged, ${active.map { it.name }}")
+            /*
+            * Select the current remote user from active participants, ignoring any old instance
+            * if the user reconnected after a network issue.
+            * */
+            val remoteUser =
+                active.firstOrNull { it.id != meeting?.localUser?.id && it.id != this@MainActivity.remoteUser?.id }
+                    ?: kotlin.run {
+                        Log.d(
+                            TAG,
+                            "onActiveParticipantsChanged, remote user is either already rendered or hasn't joined the call yet"
+                        )
+                        return
+                    }
+            setUpRemoteUser(remoteUser)
         }
     }
 
@@ -159,10 +213,22 @@ class MainActivity : AppCompatActivity() {
         meeting?.localUser?.let {
             refreshLocalUserVideo(it)
         }
-        progressBar.isVisible = false
+        hideProgressBar()
         callBottomBar.isVisible = true
-        cameraToggleButton.isEnabled = true
-        endCallButton.isEnabled = true
+        enableCallControls()
+    }
+
+    private fun setUpRemoteUser(remoteUser: DyteJoinedMeetingParticipant) {
+        if (this.remoteUser?.id == remoteUser.id) {
+            return
+        }
+
+        // removing listener from old remote user instance (if any)
+        this@MainActivity.remoteUser?.removeParticipantUpdateListener(remoteUserUpdateListener)
+
+        remoteUser.addParticipantUpdateListener(remoteUserUpdateListener)
+        this@MainActivity.remoteUser = remoteUser
+        refreshRemoteUserVideo(remoteUser)
     }
 
     private fun refreshRemoteUserVideo(remoteUser: DyteJoinedMeetingParticipant) {
@@ -221,6 +287,24 @@ class MainActivity : AppCompatActivity() {
     private fun onEndCallClicked(meeting: DyteMobileClient) {
         endCallButton.isEnabled = false
         meeting.participants.kickAll()
+    }
+
+    private fun enableCallControls() {
+        cameraToggleButton.isEnabled = true
+        endCallButton.isEnabled = true
+    }
+
+    private fun disableCallControls() {
+        cameraToggleButton.isEnabled = false
+        endCallButton.isEnabled = false
+    }
+
+    private fun showProgressBar() {
+        progressBar.isVisible = true
+    }
+
+    private fun hideProgressBar() {
+        progressBar.isVisible = false
     }
 
     companion object {
