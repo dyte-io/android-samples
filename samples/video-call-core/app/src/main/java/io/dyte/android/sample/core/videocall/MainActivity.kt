@@ -13,13 +13,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import io.dyte.core.DyteMeetingBuilder
 import io.dyte.core.DyteMobileClient
+import io.dyte.core.errors.MeetingError
 import io.dyte.core.listeners.DyteMeetingRoomEventsListener
-import io.dyte.core.listeners.DyteParticipantEventsListener
 import io.dyte.core.listeners.DyteParticipantUpdateListener
+import io.dyte.core.listeners.DyteParticipantsEventListener
 import io.dyte.core.listeners.DyteSelfEventsListener
-import io.dyte.core.models.DyteJoinedMeetingParticipant
+import io.dyte.core.meta.SocketConnectionState
+import io.dyte.core.meta.SocketState
 import io.dyte.core.models.DyteMeetingInfoV2
 import io.dyte.core.models.DyteSelfParticipant
+import io.dyte.core.participants.DyteMeetingParticipant
+import io.dyte.core.participants.DyteRemoteParticipant
 
 class MainActivity : AppCompatActivity() {
     private lateinit var localUserVideoContainer: FrameLayout
@@ -30,28 +34,28 @@ class MainActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
 
     private var meeting: DyteMobileClient? = null
-    private var remoteUser: DyteJoinedMeetingParticipant? = null
+    private var remoteUser: DyteRemoteParticipant? = null
 
     private val meetingRoomEventsListener = object : DyteMeetingRoomEventsListener {
-        override fun onMeetingInitCompleted() {
+        override fun onMeetingInitCompleted(meeting: DyteMobileClient) {
             Log.d(TAG, "onMeetingInitCompleted")
         }
 
-        override fun onMeetingInitFailed(exception: Exception) {
-            Log.d(TAG, "onMeetingInitFailed -> ${exception.message}")
+        override fun onMeetingInitFailed(error: MeetingError) {
+            Log.d(TAG, "onMeetingInitFailed -> ${error.message}")
         }
 
         override fun onMeetingInitStarted() {
             Log.d(TAG, "onMeetingInitStarted")
         }
 
-        override fun onMeetingRoomJoinCompleted() {
+        override fun onMeetingRoomJoinCompleted(meeting: DyteMobileClient) {
             Log.d(TAG, "onMeetingRoomJoinCompleted")
             showVideoCallUI()
         }
 
-        override fun onMeetingRoomJoinFailed(exception: Exception) {
-            Log.d(TAG, "onMeetingRoomJoinFailed -> ${exception.message}")
+        override fun onMeetingRoomJoinFailed(error: MeetingError) {
+            Log.d(TAG, "onMeetingRoomJoinFailed -> ${error.message}")
         }
 
         override fun onMeetingRoomJoinStarted() {
@@ -69,7 +73,18 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        override fun onMeetingRoomReconnectionFailed() {
+        override fun onSocketConnectionUpdate(newState: SocketConnectionState) {
+            Log.d(TAG, "onSocketConnectionUpdate:$newState")
+            if (newState.socketState == SocketState.CONNECTED && newState.reconnected) {
+                onReconnectedToMeetingRoom()
+            } else if (newState.socketState == SocketState.RECONNECTING && newState.reconnectionAttempt == 0) {
+                onReconnectingToMeetingRoom()
+            } else if (newState.isReconnectionFailure) {
+                onMeetingRoomReconnectionFailed()
+            }
+        }
+
+        private fun onMeetingRoomReconnectionFailed() {
             Log.d(TAG, "onMeetingRoomReconnectionFailed")
             Toast.makeText(
                 applicationContext,
@@ -86,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        override fun onReconnectedToMeetingRoom() {
+        private fun onReconnectedToMeetingRoom() {
             Log.d(TAG, "onReconnectedToMeetingRoom")
             Toast.makeText(
                 applicationContext,
@@ -95,7 +110,7 @@ class MainActivity : AppCompatActivity() {
             ).show()
         }
 
-        override fun onReconnectingToMeetingRoom() {
+        private fun onReconnectingToMeetingRoom() {
             Log.d(TAG, "onReconnectingToMeetingRoom")
             Toast.makeText(
                 applicationContext,
@@ -108,7 +123,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val localUserEventsListener = object : DyteSelfEventsListener {
-        override fun onVideoUpdate(videoEnabled: Boolean) {
+        override fun onVideoUpdate(isEnabled: Boolean) {
             meeting?.localUser?.let {
                 refreshLocalUserVideo(it)
             }
@@ -117,30 +132,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val remoteUserUpdateListener = object : DyteParticipantUpdateListener {
-        override fun onVideoUpdate(isEnabled: Boolean) {
-            remoteUser?.let {
-                refreshRemoteUserVideo(it)
+        override fun onVideoUpdate(participant: DyteMeetingParticipant, isEnabled: Boolean) {
+            if (participant.id == remoteUser?.id) {
+                refreshRemoteUserVideo(participant as DyteRemoteParticipant)
             }
         }
     }
 
-    private val participantEventsListener = object : DyteParticipantEventsListener {
-        override fun onParticipantJoin(participant: DyteJoinedMeetingParticipant) {
+    private val participantsEventListener = object : DyteParticipantsEventListener {
+        override fun onParticipantJoin(participant: DyteRemoteParticipant) {
             Log.d(TAG, "onParticipantJoin, ${participant.name}")
         }
 
-        override fun onParticipantLeave(participant: DyteJoinedMeetingParticipant) {
+        override fun onParticipantLeave(participant: DyteRemoteParticipant) {
             Log.d(TAG, "onParticipantLeave, ${participant.name}")
         }
 
-        override fun onActiveParticipantsChanged(active: List<DyteJoinedMeetingParticipant>) {
+        override fun onActiveParticipantsChanged(active: List<DyteRemoteParticipant>) {
             Log.d(TAG, "onActiveParticipantsChanged, ${active.map { it.name }}")
             /*
             * Select the current remote user from active participants, ignoring any old instance
             * if the user reconnected after a network issue.
             * */
             val remoteUser =
-                active.firstOrNull { it.id != meeting?.localUser?.id && it.id != this@MainActivity.remoteUser?.id }
+                active.firstOrNull { it.id != this@MainActivity.remoteUser?.id }
                     ?: kotlin.run {
                         Log.d(
                             TAG,
@@ -163,7 +178,7 @@ class MainActivity : AppCompatActivity() {
         remoteUser?.removeParticipantUpdateListener(remoteUserUpdateListener)
         meeting?.removeMeetingRoomEventsListener(meetingRoomEventsListener)
         meeting?.removeSelfEventsListener(localUserEventsListener)
-        meeting?.removeParticipantEventsListener(participantEventsListener)
+        meeting?.removeParticipantsEventListener(participantsEventListener)
         super.onDestroy()
     }
 
@@ -201,7 +216,7 @@ class MainActivity : AppCompatActivity() {
         meeting = DyteMeetingBuilder.build(this)
         meeting?.addMeetingRoomEventsListener(meetingRoomEventsListener)
         meeting?.addSelfEventsListener(localUserEventsListener)
-        meeting?.addParticipantEventsListener(participantEventsListener)
+        meeting?.addParticipantsEventListener(participantsEventListener)
         meeting?.init(
             dyteMeetingInfo = meetingInfo,
             onInitSuccess = { meeting?.joinRoom() },
@@ -218,7 +233,7 @@ class MainActivity : AppCompatActivity() {
         enableCallControls()
     }
 
-    private fun setUpRemoteUser(remoteUser: DyteJoinedMeetingParticipant) {
+    private fun setUpRemoteUser(remoteUser: DyteRemoteParticipant) {
         if (this.remoteUser?.id == remoteUser.id) {
             return
         }
@@ -231,7 +246,7 @@ class MainActivity : AppCompatActivity() {
         refreshRemoteUserVideo(remoteUser)
     }
 
-    private fun refreshRemoteUserVideo(remoteUser: DyteJoinedMeetingParticipant) {
+    private fun refreshRemoteUserVideo(remoteUser: DyteRemoteParticipant) {
         if (remoteUser.videoEnabled) {
             remoteUserVideoContainer.removeAllViews()
             val videoView = remoteUser.getVideoView()
@@ -255,7 +270,10 @@ class MainActivity : AppCompatActivity() {
     private fun refreshLocalUserVideo(localUser: DyteSelfParticipant) {
         if (localUser.videoEnabled) {
             localUserVideoContainer.removeAllViews()
-            val videoView = localUser.getSelfPreview()
+            val videoView = localUser.getSelfPreview() ?: kotlin.run {
+                Log.d(TAG, "refreshLocalUserVideo, VideoView is null even when video is enabled")
+                return
+            }
             // Setting ZOrderMediaOverlay since local user's video is placed on top of remote user's video
             videoView.setZOrderMediaOverlay(true)
             (videoView.parent as? ViewGroup)?.removeView(videoView)
@@ -278,15 +296,29 @@ class MainActivity : AppCompatActivity() {
     private fun onCameraToggleClicked(localUser: DyteSelfParticipant) {
         cameraToggleButton.isEnabled = false
         if (!localUser.videoEnabled) {
-            localUser.enableVideo()
+            localUser.enableVideo { error ->
+                if (error != null) {
+                    Log.d(TAG, "enableVideo, ${error.message}")
+                    cameraToggleButton.isEnabled = true
+                }
+            }
         } else {
-            localUser.disableVideo()
+            localUser.disableVideo { error ->
+                if (error != null) {
+                    Log.d(TAG, "disableVideo, ${error.message}")
+                    cameraToggleButton.isEnabled = true
+                }
+            }
         }
     }
 
     private fun onEndCallClicked(meeting: DyteMobileClient) {
         endCallButton.isEnabled = false
-        meeting.participants.kickAll()
+        val error = meeting.participants.kickAll()
+        if (error != null) {
+            Log.d(TAG, "endCall, ${error.message}")
+            endCallButton.isEnabled = true
+        }
     }
 
     private fun enableCallControls() {
