@@ -177,9 +177,11 @@ class MeetingView : ConstraintLayout {
     }
 
     private fun refreshFloatingPeer() {
+        val presenter = meeting.participants.active.firstOrNull { it.presetName == "webinar_presenter" }
         val pinnedPeer = meeting.participants.pinned
         val activeSpeaker = meeting.participants.activeSpeaker
         val self = meeting.localUser
+
         if (pinnedPeer != null) {
             dptvFloting.visible()
             dptvFloting.activate(pinnedPeer)
@@ -189,6 +191,9 @@ class MeetingView : ConstraintLayout {
         } else if(self.stageStatus == StageStatus.ON_STAGE) {
             dptvFloting.visible()
             dptvFloting.activate(self)
+        } else if (presenter != null) {
+            dptvFloting.visible()
+            dptvFloting.activate(presenter)
         } else {
             dptvFloting.gone()
         }
