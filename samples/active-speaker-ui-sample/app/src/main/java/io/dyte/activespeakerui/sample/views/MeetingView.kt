@@ -14,12 +14,18 @@ import dyte.io.uikit.view.participanttile.DyteParticipantTileView
 import io.dyte.activespeakerui.sample.R
 import io.dyte.activespeakerui.sample.utils.ViewUtils.gone
 import io.dyte.core.controllers.StageStatus
+import io.dyte.core.feat.DytePlugin
 import io.dyte.core.listeners.DyteParticipantEventsListener
+import io.dyte.core.listeners.DytePluginEventsListener
 import io.dyte.core.models.DyteJoinedMeetingParticipant
 
-class MeetingView : ConstraintLayout {
-    private lateinit var dptvFloting: DyteParticipantTileView
-    private lateinit var clLeftbar: ConstraintLayout
+class MeetingView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+) : ConstraintLayout(context, attrs, defStyleAttr) {
+    private var dptvFloting: DyteParticipantTileView
+    private var clLeftbar: ConstraintLayout
     private lateinit var dgvGrid: DyteGridViewV2
 
     var chatPanelOpen = false
@@ -57,30 +63,7 @@ class MeetingView : ConstraintLayout {
         }
     }
 
-    constructor(context: Context) : super(context) {
-        init(context)
-    }
-
-    constructor(
-        context: Context,
-        attrs: AttributeSet?
-    ) : super(context, attrs) {
-        init(context)
-    }
-
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
-    ) : super(
-        context,
-        attrs,
-        defStyleAttr
-    ) {
-        init(context)
-    }
-
-    private fun init(context: Context) {
+    init {
         inflate(context, R.layout.view_meeting, this)
 
         dptvFloting = findViewById(R.id.dptvFloting)
