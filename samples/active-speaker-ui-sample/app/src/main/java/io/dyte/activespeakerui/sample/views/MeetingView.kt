@@ -68,6 +68,7 @@ class MeetingView : ConstraintLayout {
         override fun onPluginDeactivated(plugin: DytePlugin) {
             super.onPluginDeactivated(plugin)
             refreshGrid()
+            dgvGrid.refresh(true)
         }
     }
 
