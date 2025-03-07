@@ -63,6 +63,18 @@ class MeetingView @JvmOverloads constructor(
         }
     }
 
+    private val pluginEventsListener = object : DytePluginEventsListener {
+        override fun onPluginActivated(plugin: DytePlugin) {
+            super.onPluginActivated(plugin)
+            refreshGrid()
+        }
+
+        override fun onPluginDeactivated(plugin: DytePlugin) {
+            super.onPluginDeactivated(plugin)
+            refreshGrid()
+        }
+    }
+
     init {
         inflate(context, R.layout.view_meeting, this)
 
@@ -75,6 +87,7 @@ class MeetingView @JvmOverloads constructor(
         dgvGrid.activate(meeting)
 
         meeting.addParticipantEventsListener(pinnedUserEventListener)
+        meeting.addPluginEventsListener(pluginEventsListener)
 
         clLeftbar.gone()
 
