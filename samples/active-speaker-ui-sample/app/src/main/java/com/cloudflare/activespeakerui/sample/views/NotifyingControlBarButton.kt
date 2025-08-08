@@ -1,4 +1,4 @@
-package io.dyte.activespeakerui.sample.views
+package com.cloudflare.activespeakerui.sample.views
 
 import android.content.Context
 import android.graphics.Canvas
@@ -9,34 +9,37 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
 import androidx.annotation.Dimension
-import dyte.io.uikit.view.controlbarbuttons.ControlBarButtonVariant
-import dyte.io.uikit.view.controlbarbuttons.DyteControlBarButton
-import io.dyte.activespeakerui.sample.utils.ViewUtils.dpToPxFloat
+import androidx.core.graphics.toColorInt
+import com.cloudflare.activespeakerui.sample.utils.ViewUtils.dpToPxFloat
+import com.cloudflare.realtimekit.ui.view.controlbarbuttons.ControlBarButtonVariant
+import com.cloudflare.realtimekit.ui.view.controlbarbuttons.RtkControlBarButton
 
-open class NotifyingControlBarButton : DyteControlBarButton {
+open class NotifyingControlBarButton : RtkControlBarButton {
   private var _notificationDotRadius: Float = 8.dpToPxFloat()
-  private var _notificationDotColor: Int = Color.parseColor("#2160FD")
+  private var _notificationDotColor: Int = "#2160FD".toColorInt()
 
   private var _notificationCountTextSize: Float = 8.dpToPxFloat()
   private var _notificationCountTextColor: Int = Color.WHITE
 
-  private val notificationDotPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-    style = Paint.Style.FILL
-    color = _notificationDotColor
-  }
+  private val notificationDotPaint =
+      Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = _notificationDotColor
+      }
 
-  private val notificationCountTextPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-    color = _notificationCountTextColor
-    textAlign = Align.CENTER
-    if (_notificationCountTextSize == 0f) {
-      _notificationCountTextSize = textSize
-    } else {
-      textSize = _notificationCountTextSize
-    }
-  }
+  private val notificationCountTextPaint =
+      Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = _notificationCountTextColor
+        textAlign = Align.CENTER
+        if (_notificationCountTextSize == 0f) {
+          _notificationCountTextSize = textSize
+        } else {
+          textSize = _notificationCountTextSize
+        }
+      }
 
   @get:Dimension
-  @setparam: Dimension
+  @setparam:Dimension
   var notificationDotRadius: Float
     get() = _notificationDotRadius
     set(value) {
@@ -45,7 +48,7 @@ open class NotifyingControlBarButton : DyteControlBarButton {
     }
 
   @get:Dimension
-  @setparam: Dimension
+  @setparam:Dimension
   var notificationDotColor: Float
     get() = _notificationDotRadius
     set(value) {
@@ -54,7 +57,7 @@ open class NotifyingControlBarButton : DyteControlBarButton {
     }
 
   @get:Dimension(unit = Dimension.SP)
-  @setparam: Dimension(unit = Dimension.SP)
+  @setparam:Dimension(unit = Dimension.SP)
   var notificationCountTextSize: Float
     get() = _notificationCountTextSize
     set(value) {
@@ -63,7 +66,7 @@ open class NotifyingControlBarButton : DyteControlBarButton {
     }
 
   @get:ColorInt
-  @setparam: ColorInt
+  @setparam:ColorInt
   var notificationCountTextColor: Int
     get() = _notificationCountTextColor
     set(value) {
@@ -83,11 +86,11 @@ open class NotifyingControlBarButton : DyteControlBarButton {
 
   constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
-  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
-    context,
-    attrs,
-    defStyleAttr
-  )
+  constructor(
+      context: Context,
+      attrs: AttributeSet?,
+      defStyleAttr: Int
+  ) : super(context, attrs, defStyleAttr)
 
   override fun dispatchDraw(canvas: Canvas) {
     super.dispatchDraw(canvas)

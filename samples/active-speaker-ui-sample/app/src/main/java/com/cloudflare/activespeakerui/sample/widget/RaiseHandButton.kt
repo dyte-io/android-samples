@@ -1,28 +1,28 @@
-package io.dyte.activespeakerui.sample.widget
+package com.cloudflare.activespeakerui.sample.widget
 
 import android.content.Context
 import android.util.AttributeSet
-import dyte.io.uikit.view.DyteJoinStageDialog
-import dyte.io.uikit.view.controlbarbuttons.DyteControlBarButton
-import io.dyte.activespeakerui.sample.R
-import io.dyte.activespeakerui.sample.utils.DyteUtils.canJoinStage
-import io.dyte.activespeakerui.sample.utils.DyteUtils.canRequestToJoinStage
-import io.dyte.activespeakerui.sample.widget.RaiseHandButtonState.AllowedToJoin
-import io.dyte.activespeakerui.sample.widget.RaiseHandButtonState.CanRequestToJoin
-import io.dyte.activespeakerui.sample.widget.RaiseHandButtonState.CancellingRequest
-import io.dyte.activespeakerui.sample.widget.RaiseHandButtonState.JoiningStage
-import io.dyte.activespeakerui.sample.widget.RaiseHandButtonState.LeavingStage
-import io.dyte.activespeakerui.sample.widget.RaiseHandButtonState.NotAllowedToJoin
-import io.dyte.activespeakerui.sample.widget.RaiseHandButtonState.OnStage
-import io.dyte.activespeakerui.sample.widget.RaiseHandButtonState.RequestedToJoin
-import io.dyte.activespeakerui.sample.widget.RaiseHandButtonState.RequestingToJoin
-import io.dyte.core.DyteMobileClient
-import io.dyte.core.controllers.DyteStageStatus
-import io.dyte.core.listeners.DyteStageEventListener
-import io.dyte.core.models.DyteSelfParticipant
+import com.cloudflare.activespeakerui.sample.R
+import com.cloudflare.activespeakerui.sample.utils.ParticipantUtils.canJoinStage
+import com.cloudflare.activespeakerui.sample.utils.ParticipantUtils.canRequestToJoinStage
+import com.cloudflare.activespeakerui.sample.widget.RaiseHandButtonState.AllowedToJoin
+import com.cloudflare.activespeakerui.sample.widget.RaiseHandButtonState.CanRequestToJoin
+import com.cloudflare.activespeakerui.sample.widget.RaiseHandButtonState.CancellingRequest
+import com.cloudflare.activespeakerui.sample.widget.RaiseHandButtonState.JoiningStage
+import com.cloudflare.activespeakerui.sample.widget.RaiseHandButtonState.LeavingStage
+import com.cloudflare.activespeakerui.sample.widget.RaiseHandButtonState.NotAllowedToJoin
+import com.cloudflare.activespeakerui.sample.widget.RaiseHandButtonState.OnStage
+import com.cloudflare.activespeakerui.sample.widget.RaiseHandButtonState.RequestedToJoin
+import com.cloudflare.activespeakerui.sample.widget.RaiseHandButtonState.RequestingToJoin
+import com.cloudflare.realtimekit.RealtimeKitClient
+import com.cloudflare.realtimekit.self.RtkSelfParticipant
+import com.cloudflare.realtimekit.stage.RtkStageEventListener
+import com.cloudflare.realtimekit.stage.StageStatus
+import com.cloudflare.realtimekit.ui.view.RtkJoinStageDialog
+import com.cloudflare.realtimekit.ui.view.controlbarbuttons.RtkControlBarButton
 
-class RaiseHandButton : DyteControlBarButton {
-  private var meeting: DyteMobileClient? = null
+class RaiseHandButton : RtkControlBarButton {
+  private var meeting: RealtimeKitClient? = null
 
   override val defaultIconResId: Int
     get() = R.drawable.ic_join_stage_24
@@ -31,47 +31,44 @@ class RaiseHandButton : DyteControlBarButton {
     get() = R.string.join_stage_label
 
   private var currentState: RaiseHandButtonState = NotAllowedToJoin
-  private var previousStageStatus: DyteStageStatus = DyteStageStatus.OFF_STAGE
 
-  private val selfStageStatusListener = object : DyteStageEventListener {
-    override fun onStageStatusUpdated(stageStatus: DyteStageStatus) {
-      super.onStageStatusUpdated(stageStatus)
-      if (previousStageStatus == stageStatus) {
-        return
-      }
+  private val selfStageStatusListener =
+      object : RtkStageEventListener {
+        override fun onStageStatusUpdated(oldStatus: StageStatus, newStatus: StageStatus) {
+          super.onStageStatusUpdated(oldStatus, newStatus)
+          if (oldStatus == newStatus) return
 
-      meeting?.let {
-        previousStageStatus = stageStatus
-        val nextState = currentState.getNext(it.localUser, stageStatus)
-        updateState(nextState)
+          meeting?.let {
+            val nextState = currentState.getNext(it.localUser, newStatus)
+            updateState(nextState)
+          }
+        }
       }
-    }
-  }
 
   var joinStageClickListener: () -> Unit = {}
 
   constructor(context: Context) : super(context)
-  constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
-    context,
-    attrs,
-    defStyleAttr
-  )
 
-  fun activate(meeting: DyteMobileClient) {
+  constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+
+  constructor(
+      context: Context,
+      attrs: AttributeSet?,
+      defStyleAttr: Int
+  ) : super(context, attrs, defStyleAttr)
+
+  fun activate(meeting: RealtimeKitClient) {
     // Removing listeners as a precaution
     removeMeetingListeners(meeting)
 
     val initialState = getButtonStateForCurrentStageStatus(meeting)
-    previousStageStatus = meeting.stage.stageStatus
-
     if (initialState == NotAllowedToJoin) {
       updateState(initialState)
       return
     }
 
     this.meeting = meeting
-    meeting.addStageEventsListener(selfStageStatusListener)
+    meeting.addStageEventListener(selfStageStatusListener)
     setOnClickListener { onClicked() }
     updateState(initialState)
   }
@@ -99,7 +96,7 @@ class RaiseHandButton : DyteControlBarButton {
   private fun onClicked() {
     meeting?.let {
       when (it.stage.stageStatus) {
-        DyteStageStatus.OFF_STAGE, DyteStageStatus.REJECTED_TO_JOIN_STAGE -> {
+        StageStatus.OFF_STAGE -> {
           if (it.localUser.canJoinStage()) {
             performJoinStage(it)
           } else if (it.localUser.canRequestToJoinStage()) {
@@ -109,23 +106,23 @@ class RaiseHandButton : DyteControlBarButton {
           }
         }
 
-        DyteStageStatus.REQUESTED_TO_JOIN_STAGE -> {
+        StageStatus.REQUESTED_TO_JOIN_STAGE -> {
           performCancelJoinStageRequest(it)
         }
 
-        DyteStageStatus.ACCEPTED_TO_JOIN_STAGE -> {
+        StageStatus.ACCEPTED_TO_JOIN_STAGE -> {
           updateState(JoiningStage)
           joinStageClickListener.invoke()
         }
 
-        DyteStageStatus.ON_STAGE -> {
+        StageStatus.ON_STAGE -> {
           performLeaveStage(it)
         }
       }
     }
   }
 
-  private fun performJoinStage(meeting: DyteMobileClient) {
+  private fun performJoinStage(meeting: RealtimeKitClient) {
     val previousButtonState = currentState
     updateState(JoiningStage)
     try {
@@ -135,7 +132,7 @@ class RaiseHandButton : DyteControlBarButton {
     }
   }
 
-  private fun performRequestToJoinStage(meeting: DyteMobileClient) {
+  private fun performRequestToJoinStage(meeting: RealtimeKitClient) {
     updateState(RequestingToJoin)
     try {
       meeting.stage.requestAccess()
@@ -144,22 +141,19 @@ class RaiseHandButton : DyteControlBarButton {
     }
   }
 
-  private fun showJoinStageConfirmation(meeting: DyteMobileClient) {
-    val dyteJoinStage =
-      DyteJoinStageDialog(context)
+  private fun showJoinStageConfirmation(meeting: RealtimeKitClient) {
+    val dyteJoinStage = RtkJoinStageDialog(context)
     // dyteJoinWebinarStageConfirmationDialog.setOnShowListener {
     //   dyteJoinWebinarStageConfirmationDialog.applyDesignTokens(designTokens)
     // }
 
     // Roll-back to previous state i.e. AllowedToJoin when user cancels the dialog
-    dyteJoinStage.setOnCancelListener {
-      updateState(AllowedToJoin)
-    }
+    dyteJoinStage.setOnCancelListener { updateState(AllowedToJoin) }
     dyteJoinStage.show()
     dyteJoinStage.activate(meeting)
   }
 
-  private fun performCancelJoinStageRequest(meeting: DyteMobileClient) {
+  private fun performCancelJoinStageRequest(meeting: RealtimeKitClient) {
     updateState(CancellingRequest)
     try {
       meeting.stage.cancelRequestAccess()
@@ -168,7 +162,7 @@ class RaiseHandButton : DyteControlBarButton {
     }
   }
 
-  private fun performLeaveStage(meeting: DyteMobileClient) {
+  private fun performLeaveStage(meeting: RealtimeKitClient) {
     updateState(LeavingStage)
     try {
       meeting.stage.leave()
@@ -183,85 +177,78 @@ class RaiseHandButton : DyteControlBarButton {
         setProcessingState(false)
         isEnabled = false
         setIconDrawable(null)
-        labelTextView.text =
-          context.getText(R.string.join_stage_label)
+        labelTextView.text = context.getText(R.string.join_stage_label)
       }
 
       CanRequestToJoin -> {
         setProcessingState(false)
         iconImageView.setImageResource(R.drawable.ic_raise_hand_32)
-        labelTextView.text =
-          context.getText(R.string.can_request_to_join_label)
+        labelTextView.text = context.getText(R.string.can_request_to_join_label)
       }
 
       RequestingToJoin -> {
         setProcessingState(true)
-        labelTextView.text =
-          context.getText(R.string.requesting_to_join_label)
+        labelTextView.text = context.getText(R.string.requesting_to_join_label)
       }
 
       RequestedToJoin -> {
         setProcessingState(false)
         iconImageView.setImageResource(R.drawable.ic_cancel_request_24)
-        labelTextView.text =
-          context.getText(R.string.requested_to_join_label)
+        labelTextView.text = context.getText(R.string.requested_to_join_label)
       }
 
       CancellingRequest -> {
         setProcessingState(false)
-        labelTextView.text =
-          context.getText(R.string.cancelling_join_request_label)
+        labelTextView.text = context.getText(R.string.cancelling_join_request_label)
       }
 
       AllowedToJoin -> {
         setProcessingState(false)
         iconImageView.setImageResource(R.drawable.ic_join_stage_24)
-        labelTextView.text =
-          context.getText(R.string.join_stage_label)
+        labelTextView.text = context.getText(R.string.join_stage_label)
       }
 
       JoiningStage -> {
         setProcessingState(false)
-        labelTextView.text =
-          context.getText(R.string.joining_stage_label)
+        labelTextView.text = context.getText(R.string.joining_stage_label)
       }
 
       OnStage -> {
         setProcessingState(false)
         iconImageView.setImageResource(R.drawable.ic_leave_stage_24)
-        labelTextView.text =
-          context.getText(R.string.leaving_stage_label)
+        labelTextView.text = context.getText(R.string.leaving_stage_label)
       }
 
       LeavingStage -> {
         setProcessingState(true)
-        labelTextView.text =
-          context.getText(R.string.leaving_stage_label)
+        labelTextView.text = context.getText(R.string.leaving_stage_label)
       }
     }
 
     currentState = state
   }
 
-  private fun removeMeetingListeners(meeting: DyteMobileClient) {
-    meeting.removeStageEventsListener(selfStageStatusListener)
+  private fun removeMeetingListeners(meeting: RealtimeKitClient) {
+    meeting.removeStageEventListener(selfStageStatusListener)
   }
 
-  private fun getButtonStateForCurrentStageStatus(meeting: DyteMobileClient): RaiseHandButtonState {
+  private fun getButtonStateForCurrentStageStatus(
+      meeting: RealtimeKitClient
+  ): RaiseHandButtonState {
     return when (meeting.stage.stageStatus) {
-      DyteStageStatus.OFF_STAGE, DyteStageStatus.REJECTED_TO_JOIN_STAGE -> {
+      StageStatus.OFF_STAGE -> {
         getButtonStateForOffStageSelfParticipant(meeting.localUser)
       }
 
-      DyteStageStatus.REQUESTED_TO_JOIN_STAGE -> {
+      StageStatus.REQUESTED_TO_JOIN_STAGE -> {
         RequestedToJoin
       }
 
-      DyteStageStatus.ACCEPTED_TO_JOIN_STAGE -> {
+      StageStatus.ACCEPTED_TO_JOIN_STAGE -> {
         AllowedToJoin
       }
 
-      DyteStageStatus.ON_STAGE -> {
+      StageStatus.ON_STAGE -> {
         OnStage
       }
     }
@@ -269,14 +256,14 @@ class RaiseHandButton : DyteControlBarButton {
 
   companion object {
     private fun RaiseHandButtonState.getNext(
-      localUser: DyteSelfParticipant,
-      stageStatus: DyteStageStatus
+        localUser: RtkSelfParticipant,
+        stageStatus: StageStatus
     ): RaiseHandButtonState {
       return when (this) {
         AllowedToJoin -> {
-          if (stageStatus == DyteStageStatus.ON_STAGE) {
+          if (stageStatus == StageStatus.ON_STAGE) {
             OnStage
-          } else if (stageStatus == DyteStageStatus.OFF_STAGE) {
+          } else if (stageStatus == StageStatus.OFF_STAGE) {
             getButtonStateForOffStageSelfParticipant(localUser)
           } else {
             JoiningStage
@@ -284,7 +271,7 @@ class RaiseHandButton : DyteControlBarButton {
         }
 
         CanRequestToJoin -> {
-          if (stageStatus == DyteStageStatus.ACCEPTED_TO_JOIN_STAGE) {
+          if (stageStatus == StageStatus.ACCEPTED_TO_JOIN_STAGE) {
             AllowedToJoin
           } else {
             RequestingToJoin
@@ -300,7 +287,7 @@ class RaiseHandButton : DyteControlBarButton {
         }
 
         LeavingStage -> {
-          if (stageStatus == DyteStageStatus.ACCEPTED_TO_JOIN_STAGE) {
+          if (stageStatus == StageStatus.ACCEPTED_TO_JOIN_STAGE) {
             AllowedToJoin
           } else {
             getButtonStateForOffStageSelfParticipant(localUser)
@@ -308,7 +295,7 @@ class RaiseHandButton : DyteControlBarButton {
         }
 
         NotAllowedToJoin -> {
-          if (stageStatus == DyteStageStatus.ACCEPTED_TO_JOIN_STAGE) {
+          if (stageStatus == StageStatus.ACCEPTED_TO_JOIN_STAGE) {
             AllowedToJoin
           } else {
             NotAllowedToJoin
@@ -316,9 +303,9 @@ class RaiseHandButton : DyteControlBarButton {
         }
 
         OnStage -> {
-          if (stageStatus == DyteStageStatus.ACCEPTED_TO_JOIN_STAGE) {
+          if (stageStatus == StageStatus.ACCEPTED_TO_JOIN_STAGE) {
             AllowedToJoin
-          } else if (stageStatus == DyteStageStatus.OFF_STAGE) {
+          } else if (stageStatus == StageStatus.OFF_STAGE) {
             getButtonStateForOffStageSelfParticipant(localUser)
           } else {
             LeavingStage
@@ -326,7 +313,7 @@ class RaiseHandButton : DyteControlBarButton {
         }
 
         RequestedToJoin -> {
-          if (stageStatus == DyteStageStatus.ACCEPTED_TO_JOIN_STAGE) {
+          if (stageStatus == StageStatus.ACCEPTED_TO_JOIN_STAGE) {
             AllowedToJoin
           } else {
             CanRequestToJoin
@@ -340,7 +327,7 @@ class RaiseHandButton : DyteControlBarButton {
     }
 
     private fun getButtonStateForOffStageSelfParticipant(
-      localUser: DyteSelfParticipant
+        localUser: RtkSelfParticipant
     ): RaiseHandButtonState {
       return if (localUser.canJoinStage()) {
         AllowedToJoin

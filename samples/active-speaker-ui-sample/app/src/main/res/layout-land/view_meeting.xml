@@ -2,8 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:background="#131313"
-    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout"
-    >
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clGridContainer"
@@ -12,9 +11,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/clLeftBar"
         android:layout_width="0dp"
-        android:layout_height="0dp" >
+        android:layout_height="0dp">
 
-        <dyte.io.uikit.view.dytegrid.DyteGridViewV2
+        <com.cloudflare.realtimekit.ui.view.grid.RtkGridView
             android:id="@+id/dgvGrid"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +22,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp" />
 
-        <dyte.io.uikit.view.participanttile.DyteParticipantTileView
+        <com.cloudflare.realtimekit.ui.view.participanttile.RtkParticipantTileView
             android:layout_marginBottom="16dp"
             android:layout_marginStart="16dp"
             android:translationZ="10dp"
