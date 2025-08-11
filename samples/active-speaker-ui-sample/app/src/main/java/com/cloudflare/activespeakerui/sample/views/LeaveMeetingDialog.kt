@@ -18,19 +18,15 @@ class LeaveMeetingDialog(
   private val meeting: RealtimeKitClient,
   private val designTokens: RtkDesignTokens? = null,
 ) : AppCompatDialog(context) {
-  private var confirmButton: RtkButton? = null
-  private var cancelButton: RtkButton? = null
+  private val confirmButton: RtkButton by lazy { findViewById(R.id.button_leave_meeting_confirm)!! }
+  private val cancelButton: RtkButton by lazy { findViewById(R.id.button_leave_meeting_cancel)!! }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.dialog_leave_meeting_confirmation)
 
-    confirmButton = findViewById(R.id.button_leave_meeting_confirm)
-    cancelButton = findViewById(R.id.button_leave_meeting_cancel)
-
-    confirmButton?.setOnClickListener { onConfirmButtonClicked() }
-
-    cancelButton?.setOnClickListener { onCancelButtonClicked() }
+    confirmButton.setOnClickListener { onConfirmButtonClicked() }
+    cancelButton.setOnClickListener { onCancelButtonClicked() }
 
     window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
     designTokens?.let { applyDesignTokens(it) }
@@ -46,7 +42,7 @@ class LeaveMeetingDialog(
   }
 
   private fun applyDesignTokens(designTokens: RtkDesignTokens) {
-    confirmButton?.applyDesignTokens(designTokens)
-    cancelButton?.applyDesignTokens(designTokens)
+    confirmButton.applyDesignTokens(designTokens)
+    cancelButton.applyDesignTokens(designTokens)
   }
 }

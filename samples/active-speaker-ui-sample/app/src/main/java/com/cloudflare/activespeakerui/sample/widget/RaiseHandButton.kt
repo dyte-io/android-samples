@@ -142,15 +142,12 @@ class RaiseHandButton : RtkControlBarButton {
   }
 
   private fun showJoinStageConfirmation(meeting: RealtimeKitClient) {
-    val dyteJoinStage = RtkJoinStageDialog(context)
-    // dyteJoinWebinarStageConfirmationDialog.setOnShowListener {
-    //   dyteJoinWebinarStageConfirmationDialog.applyDesignTokens(designTokens)
-    // }
+    val joinStage = RtkJoinStageDialog(context)
 
     // Roll-back to previous state i.e. AllowedToJoin when user cancels the dialog
-    dyteJoinStage.setOnCancelListener { updateState(AllowedToJoin) }
-    dyteJoinStage.show()
-    dyteJoinStage.activate(meeting)
+    joinStage.setOnCancelListener { updateState(AllowedToJoin) }
+    joinStage.show()
+    joinStage.activate(meeting)
   }
 
   private fun performCancelJoinStageRequest(meeting: RealtimeKitClient) {

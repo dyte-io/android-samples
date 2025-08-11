@@ -99,9 +99,7 @@ class MainActivity : AppCompatActivity() {
           showWebinarFragment()
         }
 
-        else -> {
-          println("MainActivity::onCreate::cant process state ${meetingState.javaClass.simpleName}")
-        }
+        else -> {}
       }
     }
 
@@ -138,7 +136,7 @@ class MainActivity : AppCompatActivity() {
 
   private fun showSetupScreen() {
     Log.d(TAG, "showSetupScreen")
-    // Avoiding addition of DyteSetupFragment again on Activity recreation
+    // Avoiding addition of RtkSetupFragment again on Activity recreation
     if (supportFragmentManager.fragments.lastOrNull() is RtkSetupFragment) {
       return
     }
@@ -152,13 +150,11 @@ class MainActivity : AppCompatActivity() {
 
     container.removeAllViews()
     if (getOrientation() == Configuration.ORIENTATION_PORTRAIT) {
-      Log.d(TAG, "showWebinarFragment::dyte")
       supportFragmentManager
         .beginTransaction()
         .replace(R.id.clContainer, RtkWebinarFragment())
         .commit()
     } else {
-      Log.d(TAG, "showWebinarFragment::activespeaker")
       supportFragmentManager
         .beginTransaction()
         .replace(R.id.clContainer, ActiveSpeakerWebinarFragment())
@@ -173,19 +169,10 @@ class MainActivity : AppCompatActivity() {
       }
 
       RtkMeetingViewModel.RtkMeetingState.Setup -> {
-        /*
-         * Client can also implement their custom logic here.
-         * Note: calling meeting.release is currently compulsory when closing this Activity,
-         * except when leaving the meeting by tapping the leave button or via the leave dialog.
-         * */
         viewModel.meeting.release(onSuccess = { finish() }, onFailure = { finish() })
       }
 
       else -> {
-        /*
-         * Note: calling meeting.release is currently compulsory when closing this Activity,
-         * except when leaving the meeting by tapping the leave button or via the leave dialog.
-         * */
         viewModel.meeting.release(onSuccess = { finish() }, onFailure = { finish() })
       }
     }

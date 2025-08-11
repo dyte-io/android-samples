@@ -23,15 +23,25 @@ class JoinStageConfirmationDialog(
   context: Context,
   private val designTokens: RtkDesignTokens? = null,
 ) : AppCompatDialog(context) {
-  private var participantPreviewTile: RtkParticipantTileView? = null
-  private var cameraToggleButton: RtkCameraToggleButton? = null
-  private var micToggleButton: RtkMicToggleButton? = null
-  private var confirmButton: RtkButton? = null
-  private var cancelButton: RtkButton? = null
+  private val participantPreviewTile: RtkParticipantTileView by lazy {
+    findViewById(R.id.participanttileview_join_stage_confirmation)!!
+  }
+  private val cameraToggleButton: RtkCameraToggleButton by lazy {
+    findViewById(R.id.cameratoggle_join_stage_confirmation)!!
+  }
+  private val micToggleButton: RtkMicToggleButton by lazy {
+    findViewById(R.id.mictoggle_join_stage_confirmation)!!
+  }
+  private val confirmButton: RtkButton by lazy {
+    findViewById(R.id.button_join_stage_confirmation_confirm)!!
+  }
+  private val cancelButton: RtkButton by lazy {
+    findViewById(R.id.button_join_stage_confirmation_cancel)!!
+  }
 
   private var meeting: RealtimeKitClient? = null
 
-  private var stageStatusUpdateListener =
+  private val stageStatusUpdateListener =
     object : RtkStageEventListener {
       override fun onStageStatusUpdated(oldStatus: StageStatus, newStatus: StageStatus) {
         super.onStageStatusUpdated(oldStatus, newStatus)
@@ -47,13 +57,7 @@ class JoinStageConfirmationDialog(
     super.onCreate(savedInstanceState)
     setContentView(R.layout.dialog_join_stage_confirmation)
 
-    participantPreviewTile = findViewById(R.id.participanttileview_join_stage_confirmation)
-    cameraToggleButton = findViewById(R.id.cameratoggle_join_stage_confirmation)
-    micToggleButton = findViewById(R.id.mictoggle_join_stage_confirmation)
-    confirmButton = findViewById(R.id.button_join_stage_confirmation_confirm)
-    cancelButton = findViewById(R.id.button_join_stage_confirmation_cancel)
-
-    cancelButton?.setOnClickListener { onCancelButtonClicked() }
+    cancelButton.setOnClickListener { onCancelButtonClicked() }
 
     window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
     designTokens?.let { applyDesignTokens(it) }
@@ -76,23 +80,23 @@ class JoinStageConfirmationDialog(
 
   fun activate(meeting: RealtimeKitClient) {
     this.meeting = meeting
-    participantPreviewTile?.activateForSelfPreview(meeting.localUser)
-    micToggleButton?.activate(meeting)
-    cameraToggleButton?.activate(meeting)
-    this.meeting?.addStageEventListener(stageStatusUpdateListener)
-    confirmButton?.setOnClickListener { onConfirmButtonClicked() }
+    participantPreviewTile.activateForSelfPreview(meeting.localUser)
+    micToggleButton.activate(meeting)
+    cameraToggleButton.activate(meeting)
+    meeting.addStageEventListener(stageStatusUpdateListener)
+    confirmButton.setOnClickListener { onConfirmButtonClicked() }
   }
 
   private fun onConfirmButtonClicked() {
     meeting?.let {
       if (it.stage.stageStatus == StageStatus.ACCEPTED_TO_JOIN_STAGE) {
-        confirmButton?.text = "Joining stage…"
+        confirmButton.text = "Joining stage…"
         try {
           it.stage.join()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
           // no-op
         }
-        confirmButton?.text = "Raise Hand"
+        confirmButton.text = "Raise Hand"
       }
     }
     dismiss()
@@ -103,7 +107,7 @@ class JoinStageConfirmationDialog(
       if (it.stage.stageStatus == StageStatus.ACCEPTED_TO_JOIN_STAGE) {
         try {
           it.stage.leave()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
           // no-op
         }
       }
@@ -112,10 +116,10 @@ class JoinStageConfirmationDialog(
   }
 
   private fun applyDesignTokens(designTokens: RtkDesignTokens) {
-    participantPreviewTile?.applyDesignTokens(designTokens)
-    cameraToggleButton?.applyDesignTokens(designTokens)
-    micToggleButton?.applyDesignTokens(designTokens)
-    confirmButton?.applyDesignTokens(designTokens)
-    cancelButton?.applyDesignTokens(designTokens)
+    participantPreviewTile.applyDesignTokens(designTokens)
+    cameraToggleButton.applyDesignTokens(designTokens)
+    micToggleButton.applyDesignTokens(designTokens)
+    confirmButton.applyDesignTokens(designTokens)
+    cancelButton.applyDesignTokens(designTokens)
   }
 }

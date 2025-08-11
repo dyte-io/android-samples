@@ -20,9 +20,9 @@ import com.cloudflare.realtimekit.ui.view.grid.RtkGridView
 import com.cloudflare.realtimekit.ui.view.participanttile.RtkParticipantTileView
 
 class MeetingView : ConstraintLayout {
-  private lateinit var dptvFloting: RtkParticipantTileView
-  private lateinit var clLeftbar: ConstraintLayout
-  private lateinit var dgvGrid: RtkGridView
+  private val dptvFloting: RtkParticipantTileView by lazy { findViewById(R.id.dptvFloting) }
+  private val clLeftbar: ConstraintLayout by lazy { findViewById(R.id.clLeftBar) }
+  private val dgvGrid: RtkGridView by lazy { findViewById(R.id.dgvGrid) }
 
   var chatPanelOpen = false
   var pollsPanelOpen = false
@@ -86,11 +86,7 @@ class MeetingView : ConstraintLayout {
   private fun init(context: Context) {
     inflate(context, R.layout.view_meeting, this)
 
-    dptvFloting = findViewById(R.id.dptvFloting)
     dptvFloting.setZOrderMediaOverlay()
-    clLeftbar = findViewById(R.id.clLeftBar)
-    dgvGrid = findViewById(R.id.dgvGrid)
-
     dgvGrid.enableFocusMode()
     dgvGrid.activate(meeting)
 
@@ -103,18 +99,18 @@ class MeetingView : ConstraintLayout {
   }
 
   fun toggleChatWindow(supportFragmentManager: FragmentManager) {
-    if (chatPanelOpen.not() || clLeftbar.isGone) {
+    if (!chatPanelOpen || clLeftbar.isGone) {
       chatPanelOpen = true
       val chatFragment = RtkChatFragment()
       clLeftbar.visible()
       supportFragmentManager
         .beginTransaction()
-        .replace(R.id.clLeftBar, chatFragment, "chat")
+        .replace(R.id.clLeftBar, chatFragment, CHAT_FRAGMENT)
         .commit()
       clLeftbar.post { chatFragment.hideHeader() }
     } else {
       chatPanelOpen = false
-      supportFragmentManager.findFragmentByTag("chat")?.let {
+      supportFragmentManager.findFragmentByTag(CHAT_FRAGMENT)?.let {
         supportFragmentManager.beginTransaction().remove(it).commit()
       }
       clLeftbar.gone()
@@ -123,18 +119,18 @@ class MeetingView : ConstraintLayout {
   }
 
   fun togglePollsWindow(supportFragmentManager: FragmentManager) {
-    if (pollsPanelOpen.not() || clLeftbar.isGone) {
+    if (!pollsPanelOpen || clLeftbar.isGone) {
       pollsPanelOpen = true
       val pollsFragment = RtkPollsFragment()
       clLeftbar.visible()
       supportFragmentManager
         .beginTransaction()
-        .replace(R.id.clLeftBar, pollsFragment, "polls")
+        .replace(R.id.clLeftBar, pollsFragment, POLLS_FRAGMENT)
         .commit()
       clLeftbar.post { pollsFragment.hideHeader() }
     } else {
       pollsPanelOpen = false
-      supportFragmentManager.findFragmentByTag("polls")?.let {
+      supportFragmentManager.findFragmentByTag(POLLS_FRAGMENT)?.let {
         supportFragmentManager.beginTransaction().remove(it).commit()
       }
       clLeftbar.gone()
@@ -191,5 +187,10 @@ class MeetingView : ConstraintLayout {
     } else {
       dptvFloting.gone()
     }
+  }
+
+  companion object {
+    private const val POLLS_FRAGMENT = "polls"
+    private const val CHAT_FRAGMENT = "chat"
   }
 }

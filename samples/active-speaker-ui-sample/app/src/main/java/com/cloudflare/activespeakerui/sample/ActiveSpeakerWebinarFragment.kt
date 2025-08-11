@@ -19,19 +19,30 @@ import com.cloudflare.realtimekit.stage.RtkStageEventListener
 import com.cloudflare.realtimekit.stage.StageStatus
 import com.cloudflare.realtimekit.ui.RealtimeKitUIBuilder
 import com.cloudflare.realtimekit.ui.screens.settings.RtkSettingsFragment
-import com.cloudflare.realtimekit.ui.token.RtkDesignTokens
 import com.cloudflare.realtimekit.ui.view.RtkMeetingTitleView
 import com.cloudflare.realtimekit.ui.view.controlbarbuttons.RtkControlBarButton
 import com.cloudflare.realtimekit.ui.view.controlbars.RtkControlBarView
 
 class ActiveSpeakerWebinarFragment : Fragment() {
-  private lateinit var meetingTitleView: RtkMeetingTitleView
-  private lateinit var controlBarView: RtkControlBarView
-  private lateinit var chatToggleButton: NotifyingControlBarButton
-  private lateinit var pollsToggleButton: NotifyingControlBarButton
-  private lateinit var raiseHandButton: RaiseHandButton
-  private lateinit var settingsButton: RtkControlBarButton
-  private lateinit var meetingView: MeetingView
+  private val meetingTitleView: RtkMeetingTitleView by lazy {
+    view?.findViewById(R.id.meeting_title_view)!!
+  }
+  private val controlBarView: RtkControlBarView by lazy {
+    view?.findViewById(R.id.meeting_controls)!!
+  }
+  private val chatToggleButton: NotifyingControlBarButton by lazy {
+    view?.findViewById(R.id.button_chat_toggle)!!
+  }
+  private val pollsToggleButton: NotifyingControlBarButton by lazy {
+    view?.findViewById(R.id.button_polls_toggle)!!
+  }
+  private val raiseHandButton: RaiseHandButton by lazy {
+    view?.findViewById(R.id.button_raise_hand)!!
+  }
+  private val settingsButton: RtkControlBarButton by lazy {
+    view?.findViewById(R.id.button_settings)!!
+  }
+  private val meetingView: MeetingView by lazy { view?.findViewById(R.id.meeting_view)!! }
 
   private val meeting by lazy { RealtimeKitUIBuilder.realtimeKitUI.meeting }
 
@@ -89,9 +100,13 @@ class ActiveSpeakerWebinarFragment : Fragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    setUpHeaderView(view)
-    setUpControlBarView(view)
-    applyDesignTokens(RealtimeKitUIBuilder.realtimeKitUI.designTokens)
+
+    chatToggleButton.setOnClickListener { onChatToggleButtonClicked() }
+    pollsToggleButton.setOnClickListener { onPollsToggleButtonClicked() }
+    raiseHandButton.joinStageClickListener = { showJoinStageConfirmationDialog() }
+    settingsButton.setOnClickListener { onSettingsButtonClicked() }
+    controlBarView.applyDesignTokens(RealtimeKitUIBuilder.realtimeKitUI.designTokens)
+
     activateUI(meeting)
   }
 
@@ -100,31 +115,6 @@ class ActiveSpeakerWebinarFragment : Fragment() {
     meeting.removeChatEventListener(readChatListener)
     meeting.removePollsEventListener(readPollsListener)
     super.onDestroyView()
-  }
-
-  private fun setUpHeaderView(rootView: View) {
-    meetingTitleView = rootView.findViewById(R.id.meeting_title_view)
-  }
-
-  private fun setUpControlBarView(rootView: View) {
-    controlBarView = rootView.findViewById(R.id.meeting_controls)
-    chatToggleButton = rootView.findViewById(R.id.button_chat_toggle)
-    pollsToggleButton = rootView.findViewById(R.id.button_polls_toggle)
-    raiseHandButton = rootView.findViewById(R.id.button_raise_hand)
-    settingsButton = rootView.findViewById(R.id.button_settings)
-    meetingView = rootView.findViewById(R.id.meeting_view)
-
-    chatToggleButton.setOnClickListener { onChatToggleButtonClicked() }
-
-    pollsToggleButton.setOnClickListener { onPollsToggleButtonClicked() }
-
-    raiseHandButton.joinStageClickListener = { showJoinStageConfirmationDialog() }
-
-    settingsButton.setOnClickListener { onSettingsButtonClicked() }
-  }
-
-  private fun applyDesignTokens(designTokens: RtkDesignTokens) {
-    controlBarView.applyDesignTokens(designTokens)
   }
 
   private fun activateUI(meeting: RealtimeKitClient) {
@@ -151,11 +141,8 @@ class ActiveSpeakerWebinarFragment : Fragment() {
 
   private fun onSettingsButtonClicked() {
     Log.d(TAG, "SettingsButtonClicked")
-    val dyteSettingsFragment = RtkSettingsFragment()
-    dyteSettingsFragment.show(
-      childFragmentManager,
-      ActiveSpeakerWebinarFragment::class.java.simpleName,
-    )
+    val settingsFragment = RtkSettingsFragment()
+    settingsFragment.show(childFragmentManager, ActiveSpeakerWebinarFragment::class.java.simpleName)
   }
 
   private fun showJoinStageConfirmationDialog() {
