@@ -1,51 +1,51 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:background="#131313"
-    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:background="#131313"
+  tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clGridContainer"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/clLeftBar"
-        android:layout_width="0dp"
-        android:layout_height="0dp">
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/clGridContainer"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/clLeftBar"
+    android:layout_width="0dp"
+    android:layout_height="0dp">
 
-        <com.cloudflare.realtimekit.ui.view.grid.RtkGridView
-            android:id="@+id/dgvGrid"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_width="0dp"
-            android:layout_height="0dp" />
+    <com.cloudflare.realtimekit.ui.view.grid.RtkGridView
+      android:id="@+id/dgvGrid"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      android:layout_width="0dp"
+      android:layout_height="0dp" />
 
-        <com.cloudflare.realtimekit.ui.view.participanttile.RtkParticipantTileView
-            android:layout_marginBottom="16dp"
-            android:layout_marginStart="16dp"
-            android:translationZ="10dp"
-            android:elevation="10dp"
-            android:id="@+id/dptvFloting"
-            android:visibility="gone"
-            tools:visibility="visible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
+    <com.cloudflare.realtimekit.ui.view.participanttile.RtkParticipantTileView
+      android:layout_marginBottom="16dp"
+      android:layout_marginStart="16dp"
+      android:translationZ="10dp"
+      android:elevation="10dp"
+      android:id="@+id/dptvFloting"
+      android:visibility="gone"
+      tools:visibility="visible"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      android:layout_width="100dp"
+      android:layout_height="100dp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="#131313"
-        android:id="@+id/clLeftBar"
-        android:layout_width="200dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_height="0dp">
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:background="#131313"
+    android:id="@+id/clLeftBar"
+    android:layout_width="200dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    android:layout_height="0dp">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
 
 </merge>

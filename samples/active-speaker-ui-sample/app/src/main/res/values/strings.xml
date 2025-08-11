@@ -1,13 +1,13 @@
 <resources>
-    <string name="app_name">Active Speaker UI Sample</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="can_request_to_join_label">Raise Hand</string>
-    <string name="requesting_to_join_label">Requesting</string>
-    <string name="requested_to_join_label">Cancel request</string>
-    <string name="cancelling_join_request_label">Cancelling</string>
-    <string name="join_stage_label">Join Stage</string>
-    <string name="joining_stage_label">Joining</string>
-    <string name="on_stage_label">Leave stage</string>
-    <string name="leaving_stage_label">Leaving</string>
+  <string name="app_name">Active Speaker UI Sample</string>
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="can_request_to_join_label">Raise Hand</string>
+  <string name="requesting_to_join_label">Requesting</string>
+  <string name="requested_to_join_label">Cancel request</string>
+  <string name="cancelling_join_request_label">Cancelling</string>
+  <string name="join_stage_label">Join Stage</string>
+  <string name="joining_stage_label">Joining</string>
+  <string name="on_stage_label">Leave stage</string>
+  <string name="leaving_stage_label">Leaving</string>
 </resources>
