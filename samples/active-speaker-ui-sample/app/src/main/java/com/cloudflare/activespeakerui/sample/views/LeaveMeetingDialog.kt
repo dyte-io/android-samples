@@ -14,9 +14,9 @@ import com.cloudflare.realtimekit.ui.view.button.RtkButton
  * NOTE: This can also be implemented using a DialogFragment if the codebase already uses Fragments.
  * */
 class LeaveMeetingDialog(
-    context: Context,
-    private val meeting: RealtimeKitClient,
-    private val designTokens: RtkDesignTokens? = null
+  context: Context,
+  private val meeting: RealtimeKitClient,
+  private val designTokens: RtkDesignTokens? = null,
 ) : AppCompatDialog(context) {
   private var confirmButton: RtkButton? = null
   private var cancelButton: RtkButton? = null

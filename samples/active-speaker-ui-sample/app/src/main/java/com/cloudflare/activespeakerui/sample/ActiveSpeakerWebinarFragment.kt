@@ -36,53 +36,53 @@ class ActiveSpeakerWebinarFragment : Fragment() {
   private val meeting by lazy { RealtimeKitUIBuilder.realtimeKitUI.meeting }
 
   private val stageInvitationListener =
-      object : RtkStageEventListener {
-        override fun onStageStatusUpdated(oldStatus: StageStatus, newStatus: StageStatus) {
-          super.onStageStatusUpdated(oldStatus, newStatus)
-          if (newStatus == StageStatus.ACCEPTED_TO_JOIN_STAGE) {
-            showJoinStageConfirmationDialog()
-          }
+    object : RtkStageEventListener {
+      override fun onStageStatusUpdated(oldStatus: StageStatus, newStatus: StageStatus) {
+        super.onStageStatusUpdated(oldStatus, newStatus)
+        if (newStatus == StageStatus.ACCEPTED_TO_JOIN_STAGE) {
+          showJoinStageConfirmationDialog()
         }
       }
+    }
 
   private val readChatListener =
-      object : RtkChatEventListener {
-        private var readChatCount = 0
+    object : RtkChatEventListener {
+      private var readChatCount = 0
 
-        override fun onChatUpdates(messages: List<ChatMessage>) {
-          super.onChatUpdates(messages)
-          if (!meetingView.chatPanelOpen) {
-            val unreadChatCount = messages.size - readChatCount
-            chatToggleButton.notificationCount = unreadChatCount
-          } else {
-            readChatCount = messages.size
-          }
+      override fun onChatUpdates(messages: List<ChatMessage>) {
+        super.onChatUpdates(messages)
+        if (!meetingView.chatPanelOpen) {
+          val unreadChatCount = messages.size - readChatCount
+          chatToggleButton.notificationCount = unreadChatCount
+        } else {
+          readChatCount = messages.size
         }
       }
+    }
 
   private val readPollsListener =
-      object : RtkPollsEventListener {
-        private var readPollsCount = 0
+    object : RtkPollsEventListener {
+      private var readPollsCount = 0
 
-        override fun onPollUpdates(pollItems: List<Poll>) {
-          super.onPollUpdates(pollItems)
-          if (!meetingView.pollsPanelOpen) {
-            val unreadPollsCount = pollItems.size - readPollsCount
-            pollsToggleButton.notificationCount = unreadPollsCount
-          } else {
-            readPollsCount = pollItems.size
-          }
+      override fun onPollUpdates(pollItems: List<Poll>) {
+        super.onPollUpdates(pollItems)
+        if (!meetingView.pollsPanelOpen) {
+          val unreadPollsCount = pollItems.size - readPollsCount
+          pollsToggleButton.notificationCount = unreadPollsCount
+        } else {
+          readPollsCount = pollItems.size
         }
       }
+    }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
   }
 
   override fun onCreateView(
-      inflater: LayoutInflater,
-      container: ViewGroup?,
-      savedInstanceState: Bundle?
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?,
   ): View? {
     return inflater.inflate(R.layout.fragment_active_speaker_webinar, container, false)
   }
@@ -153,13 +153,14 @@ class ActiveSpeakerWebinarFragment : Fragment() {
     Log.d(TAG, "SettingsButtonClicked")
     val dyteSettingsFragment = RtkSettingsFragment()
     dyteSettingsFragment.show(
-        childFragmentManager, ActiveSpeakerWebinarFragment::class.java.simpleName)
+      childFragmentManager,
+      ActiveSpeakerWebinarFragment::class.java.simpleName,
+    )
   }
 
   private fun showJoinStageConfirmationDialog() {
     val joinStageConfirmationDialog =
-        JoinStageConfirmationDialog(
-            requireContext(), RealtimeKitUIBuilder.realtimeKitUI.designTokens)
+      JoinStageConfirmationDialog(requireContext(), RealtimeKitUIBuilder.realtimeKitUI.designTokens)
     joinStageConfirmationDialog.show()
     joinStageConfirmationDialog.activate(meeting)
   }

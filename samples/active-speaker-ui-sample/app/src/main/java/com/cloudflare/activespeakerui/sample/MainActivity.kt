@@ -36,27 +36,32 @@ class MainActivity : AppCompatActivity() {
   private lateinit var meetingRoomProgressBar: ProgressBar
 
   private val onBackPressedCallback =
-      object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-          this@MainActivity.handleOnBackPressed()
-        }
+    object : OnBackPressedCallback(true) {
+      override fun handleOnBackPressed() {
+        this@MainActivity.handleOnBackPressed()
       }
+    }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
     val meetingInfo =
-        RtkMeetingInfo(authToken = MeetingConfig.AUTH_TOKEN, baseDomain = MeetingConfig.BASE_URL)
+      RtkMeetingInfo(authToken = MeetingConfig.AUTH_TOKEN, baseDomain = MeetingConfig.BASE_URL)
+
     RealtimeKitUIBuilder.build(
-        RealtimeKitUIInfo(
-            activity = this,
-            rtkMeetingInfo = meetingInfo,
-            uiKitConfig =
-                RealtimeKitUIConfig(
-                    RealtimeKitUINotificationsConfig(
-                        participantJoinConfig = RealtimeKitNotificationConfig(false),
-                        participantLeaveConfig = RealtimeKitNotificationConfig(false)))))
+      RealtimeKitUIInfo(
+        activity = this,
+        rtkMeetingInfo = meetingInfo,
+        uiKitConfig =
+          RealtimeKitUIConfig(
+            RealtimeKitUINotificationsConfig(
+              participantJoinConfig = RealtimeKitNotificationConfig(false),
+              participantLeaveConfig = RealtimeKitNotificationConfig(false),
+            )
+          ),
+      )
+    )
 
     container = findViewById(R.id.clContainer)
     meetingRoomProgressBar = findViewById(R.id.progressbar_meeting_room)
@@ -149,15 +154,15 @@ class MainActivity : AppCompatActivity() {
     if (getOrientation() == Configuration.ORIENTATION_PORTRAIT) {
       Log.d(TAG, "showWebinarFragment::dyte")
       supportFragmentManager
-          .beginTransaction()
-          .replace(R.id.clContainer, RtkWebinarFragment())
-          .commit()
+        .beginTransaction()
+        .replace(R.id.clContainer, RtkWebinarFragment())
+        .commit()
     } else {
       Log.d(TAG, "showWebinarFragment::activespeaker")
       supportFragmentManager
-          .beginTransaction()
-          .replace(R.id.clContainer, ActiveSpeakerWebinarFragment())
-          .commit()
+        .beginTransaction()
+        .replace(R.id.clContainer, ActiveSpeakerWebinarFragment())
+        .commit()
     }
   }
 
@@ -188,10 +193,11 @@ class MainActivity : AppCompatActivity() {
 
   private fun showLeaveClassDialog() {
     val leaveClassDialog =
-        LeaveMeetingDialog(
-            this,
-            meeting = viewModel.meeting,
-            designTokens = RealtimeKitUIBuilder.realtimeKitUI.designTokens)
+      LeaveMeetingDialog(
+        this,
+        meeting = viewModel.meeting,
+        designTokens = RealtimeKitUIBuilder.realtimeKitUI.designTokens,
+      )
     leaveClassDialog.show()
 
     if (getOrientation() == Configuration.ORIENTATION_PORTRAIT) {
@@ -205,8 +211,9 @@ class MainActivity : AppCompatActivity() {
     val meeting = viewModel.meeting
     meeting.chat.setCharacterLimit(MeetingConfig.CHAT_CHARACTER_LIMIT)
     meeting.chat.setMessageRateLimit(
-        maxMessages = MeetingConfig.CHAT_MAX_MESSAGES,
-        intervalInSeconds = MeetingConfig.CHAT_MESSAGE_INTERVAL_SECONDS)
+      maxMessages = MeetingConfig.CHAT_MAX_MESSAGES,
+      intervalInSeconds = MeetingConfig.CHAT_MESSAGE_INTERVAL_SECONDS,
+    )
   }
 
   companion object {

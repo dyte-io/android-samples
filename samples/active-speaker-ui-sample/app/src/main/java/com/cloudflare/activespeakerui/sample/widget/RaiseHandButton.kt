@@ -33,17 +33,17 @@ class RaiseHandButton : RtkControlBarButton {
   private var currentState: RaiseHandButtonState = NotAllowedToJoin
 
   private val selfStageStatusListener =
-      object : RtkStageEventListener {
-        override fun onStageStatusUpdated(oldStatus: StageStatus, newStatus: StageStatus) {
-          super.onStageStatusUpdated(oldStatus, newStatus)
-          if (oldStatus == newStatus) return
+    object : RtkStageEventListener {
+      override fun onStageStatusUpdated(oldStatus: StageStatus, newStatus: StageStatus) {
+        super.onStageStatusUpdated(oldStatus, newStatus)
+        if (oldStatus == newStatus) return
 
-          meeting?.let {
-            val nextState = currentState.getNext(it.localUser, newStatus)
-            updateState(nextState)
-          }
+        meeting?.let {
+          val nextState = currentState.getNext(it.localUser, newStatus)
+          updateState(nextState)
         }
       }
+    }
 
   var joinStageClickListener: () -> Unit = {}
 
@@ -52,9 +52,9 @@ class RaiseHandButton : RtkControlBarButton {
   constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
   constructor(
-      context: Context,
-      attrs: AttributeSet?,
-      defStyleAttr: Int
+    context: Context,
+    attrs: AttributeSet?,
+    defStyleAttr: Int,
   ) : super(context, attrs, defStyleAttr)
 
   fun activate(meeting: RealtimeKitClient) {
@@ -233,7 +233,7 @@ class RaiseHandButton : RtkControlBarButton {
   }
 
   private fun getButtonStateForCurrentStageStatus(
-      meeting: RealtimeKitClient
+    meeting: RealtimeKitClient
   ): RaiseHandButtonState {
     return when (meeting.stage.stageStatus) {
       StageStatus.OFF_STAGE -> {
@@ -256,8 +256,8 @@ class RaiseHandButton : RtkControlBarButton {
 
   companion object {
     private fun RaiseHandButtonState.getNext(
-        localUser: RtkSelfParticipant,
-        stageStatus: StageStatus
+      localUser: RtkSelfParticipant,
+      stageStatus: StageStatus,
     ): RaiseHandButtonState {
       return when (this) {
         AllowedToJoin -> {
@@ -327,7 +327,7 @@ class RaiseHandButton : RtkControlBarButton {
     }
 
     private fun getButtonStateForOffStageSelfParticipant(
-        localUser: RtkSelfParticipant
+      localUser: RtkSelfParticipant
     ): RaiseHandButtonState {
       return if (localUser.canJoinStage()) {
         AllowedToJoin

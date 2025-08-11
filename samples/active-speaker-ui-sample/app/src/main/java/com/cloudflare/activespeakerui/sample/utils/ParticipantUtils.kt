@@ -9,7 +9,7 @@ internal object ParticipantUtils {
     val audioProductionPermission = permissions.media.audioPermission
 
     return videoProductionPermission == MediaPermission.ALLOWED ||
-        audioProductionPermission == MediaPermission.ALLOWED
+      audioProductionPermission == MediaPermission.ALLOWED
   }
 
   fun RtkSelfParticipant.canRequestToJoinStage(): Boolean {
@@ -17,6 +17,6 @@ internal object ParticipantUtils {
     val audioProductionPermission = permissions.media.audioPermission
 
     return videoProductionPermission == MediaPermission.CAN_REQUEST ||
-        audioProductionPermission == MediaPermission.CAN_REQUEST
+      audioProductionPermission == MediaPermission.CAN_REQUEST
   }
 }

@@ -15,9 +15,9 @@ class ActiveSpeakerGridView : RelativeLayout {
   }
 
   constructor(
-      context: Context,
-      attrs: AttributeSet?,
-      defStyleAttr: Int
+    context: Context,
+    attrs: AttributeSet?,
+    defStyleAttr: Int,
   ) : super(context, attrs, defStyleAttr) {
     init(context)
   }

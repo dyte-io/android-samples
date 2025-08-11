@@ -22,21 +22,21 @@ open class NotifyingControlBarButton : RtkControlBarButton {
   private var _notificationCountTextColor: Int = Color.WHITE
 
   private val notificationDotPaint =
-      Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL
-        color = _notificationDotColor
-      }
+    Paint(Paint.ANTI_ALIAS_FLAG).apply {
+      style = Paint.Style.FILL
+      color = _notificationDotColor
+    }
 
   private val notificationCountTextPaint =
-      Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = _notificationCountTextColor
-        textAlign = Align.CENTER
-        if (_notificationCountTextSize == 0f) {
-          _notificationCountTextSize = textSize
-        } else {
-          textSize = _notificationCountTextSize
-        }
+    Paint(Paint.ANTI_ALIAS_FLAG).apply {
+      color = _notificationCountTextColor
+      textAlign = Align.CENTER
+      if (_notificationCountTextSize == 0f) {
+        _notificationCountTextSize = textSize
+      } else {
+        textSize = _notificationCountTextSize
       }
+    }
 
   @get:Dimension
   @setparam:Dimension
@@ -87,9 +87,9 @@ open class NotifyingControlBarButton : RtkControlBarButton {
   constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
   constructor(
-      context: Context,
-      attrs: AttributeSet?,
-      defStyleAttr: Int
+    context: Context,
+    attrs: AttributeSet?,
+    defStyleAttr: Int,
   ) : super(context, attrs, defStyleAttr)
 
   override fun dispatchDraw(canvas: Canvas) {

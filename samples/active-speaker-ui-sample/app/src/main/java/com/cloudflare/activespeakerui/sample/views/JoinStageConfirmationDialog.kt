@@ -20,8 +20,8 @@ import com.cloudflare.realtimekit.ui.view.participanttile.RtkParticipantTileView
 
 // NOTE: This can also be implemented using a DialogFragment if the codebase already uses Fragments.
 class JoinStageConfirmationDialog(
-    context: Context,
-    private val designTokens: RtkDesignTokens? = null
+  context: Context,
+  private val designTokens: RtkDesignTokens? = null,
 ) : AppCompatDialog(context) {
   private var participantPreviewTile: RtkParticipantTileView? = null
   private var cameraToggleButton: RtkCameraToggleButton? = null
@@ -32,16 +32,16 @@ class JoinStageConfirmationDialog(
   private var meeting: RealtimeKitClient? = null
 
   private var stageStatusUpdateListener =
-      object : RtkStageEventListener {
-        override fun onStageStatusUpdated(oldStatus: StageStatus, newStatus: StageStatus) {
-          super.onStageStatusUpdated(oldStatus, newStatus)
+    object : RtkStageEventListener {
+      override fun onStageStatusUpdated(oldStatus: StageStatus, newStatus: StageStatus) {
+        super.onStageStatusUpdated(oldStatus, newStatus)
 
-          val shouldDismissDialog =
-              oldStatus == StageStatus.ACCEPTED_TO_JOIN_STAGE && newStatus == StageStatus.OFF_STAGE
+        val shouldDismissDialog =
+          oldStatus == StageStatus.ACCEPTED_TO_JOIN_STAGE && newStatus == StageStatus.OFF_STAGE
 
-          if (shouldDismissDialog) dismiss()
-        }
+        if (shouldDismissDialog) dismiss()
       }
+    }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
