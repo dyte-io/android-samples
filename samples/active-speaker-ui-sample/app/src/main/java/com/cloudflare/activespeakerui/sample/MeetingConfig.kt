@@ -1,4 +1,4 @@
-package io.dyte.activespeakerui.sample
+package com.cloudflare.activespeakerui.sample
 
 object MeetingConfig {
   var AUTH_TOKEN = "<ENTER-AUTH-TOKEN-HERE>"
