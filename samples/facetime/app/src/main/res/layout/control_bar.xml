@@ -1,68 +1,68 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:background="#131313"
-    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:background="#131313"
+  tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
-    <LinearLayout
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:weightSum="5"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+  <LinearLayout
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="5"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent">
 
-        <dyte.io.uikit.view.controlbarbuttons.DyteCameraToggleButton
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_weight="1"
-            app:dyte_cbb_showText="false"
-            android:gravity="center"
-            android:id="@+id/dyte_camera_toggle"
-            android:layout_width="0dp"
-            android:layout_height="48dp" />
+    <com.cloudflare.realtimekit.ui.view.controlbarbuttons.RtkCameraToggleButton
+      android:id="@+id/rtk_camera_toggle"
+      android:layout_width="0dp"
+      android:layout_height="48dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:layout_weight="1"
+      android:gravity="center"
+      app:rtk_cbb_showText="false" />
 
-        <dyte.io.uikit.view.controlbarbuttons.DyteMicToggleButton
-            android:layout_weight="1"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:id="@+id/dyte_mic_toggle"
-            android:layout_width="0dp"
-            app:dyte_cbb_showText="false"
-            android:gravity="center"
-            android:layout_height="48dp" />
+    <com.cloudflare.realtimekit.ui.view.controlbarbuttons.RtkMicToggleButton
+      android:id="@+id/rtk_mic_toggle"
+      android:layout_width="0dp"
+      android:layout_height="48dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:layout_weight="1"
+      android:gravity="center"
+      app:rtk_cbb_showText="false" />
 
-        <dyte.io.uikit.view.controlbarbuttons.DyteControlBarButton
-            android:layout_weight="1"
-            app:dyte_cbb_icon="@drawable/ic_chat"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:id="@+id/dyte_chat"
-            android:gravity="center"
-            app:dyte_cbb_showText="false"
-            android:layout_width="0dp"
-            android:layout_height="48dp" />
+    <com.cloudflare.realtimekit.ui.view.controlbarbuttons.RtkControlBarButton
+      android:id="@+id/rtk_chat"
+      android:layout_width="0dp"
+      android:layout_height="48dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:layout_weight="1"
+      android:gravity="center"
+      app:rtk_cbb_icon="@drawable/ic_chat"
+      app:rtk_cbb_showText="false" />
 
-        <dyte.io.uikit.view.controlbarbuttons.DyteControlBarButton
-            app:dyte_cbb_icon="@drawable/ic_participant"
-            android:layout_weight="1"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            app:dyte_cbb_showText="false"
-            android:gravity="center"
-            android:id="@+id/dyte_participant"
-            android:layout_width="0dp"
-            android:layout_height="48dp" />
+    <com.cloudflare.realtimekit.ui.view.controlbarbuttons.RtkControlBarButton
+      android:id="@+id/rtk_participant"
+      android:layout_width="0dp"
+      android:layout_height="48dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:layout_weight="1"
+      android:gravity="center"
+      app:rtk_cbb_icon="@drawable/ic_participant"
+      app:rtk_cbb_showText="false" />
 
-        <dyte.io.uikit.view.controlbarbuttons.DyteLeaveButton
-            android:id="@+id/dyte_leave"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_weight="1"
-            app:dyte_cbb_showText="false" />
+    <com.cloudflare.realtimekit.ui.view.controlbarbuttons.RtkLeaveButton
+      android:id="@+id/rtk_leave"
+      android:layout_width="0dp"
+      android:layout_height="48dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginEnd="16dp"
+      android:layout_weight="1"
+      app:rtk_cbb_showText="false" />
 
-    </LinearLayout>
+  </LinearLayout>
 
 </merge>
