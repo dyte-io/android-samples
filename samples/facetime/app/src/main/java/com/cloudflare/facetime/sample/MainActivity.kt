@@ -51,9 +51,7 @@ class MainActivity : AppCompatActivity() {
         RtkMeetingViewModel.RtkMeetingState.Removed -> {
           showError("Removed from meeting!")
         }
-        else -> {
-          // todo : implement remaining states
-        }
+        else -> {}
       }
     }
 

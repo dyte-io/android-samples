@@ -56,6 +56,6 @@ class ControlBarView : ConstraintLayout {
   }
 
   companion object {
-    const val TAG = "ControlBarView"
+    private const val TAG = "ControlBarView"
   }
 }
