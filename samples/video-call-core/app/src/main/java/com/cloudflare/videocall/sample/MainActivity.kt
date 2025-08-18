@@ -24,143 +24,130 @@ import com.cloudflare.realtimekit.participants.RtkParticipantsEventListener
 import com.cloudflare.realtimekit.participants.RtkRemoteParticipant
 import com.cloudflare.realtimekit.self.RtkSelfEventListener
 import com.cloudflare.realtimekit.self.RtkSelfParticipant
+import com.cloudflare.videocall.sample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-  private lateinit var localUserVideoContainer: FrameLayout
-  private lateinit var remoteUserVideoContainer: FrameLayout
-  private lateinit var callBottomBar: LinearLayout
-  private lateinit var cameraToggleButton: Button
-  private lateinit var endCallButton: Button
-  private lateinit var progressBar: ProgressBar
+  private var _binding: ActivityMainBinding? = null
+  private val binding get() = _binding!!
 
   private var meeting: RealtimeKitClient? = null
   private var remoteUser: RtkRemoteParticipant? = null
 
-  private val meetingRoomEventsListener =
-      object : RtkMeetingRoomEventListener {
-        override fun onMeetingInitCompleted(meeting: RealtimeKitClient) {
-          Log.d(TAG, "onMeetingInitCompleted")
-        }
+  private val meetingRoomEventsListener = object : RtkMeetingRoomEventListener {
+    override fun onMeetingInitCompleted(meeting: RealtimeKitClient) {
+      Log.d(TAG, "onMeetingInitCompleted")
+    }
 
-        override fun onMeetingInitFailed(error: MeetingError) {
-          Log.d(TAG, "onMeetingInitFailed -> ${error.message}")
-        }
+    override fun onMeetingInitFailed(error: MeetingError) {
+      Log.d(TAG, "onMeetingInitFailed -> ${error.message}")
+    }
 
-        override fun onMeetingInitStarted() {
-          Log.d(TAG, "onMeetingInitStarted")
-        }
+    override fun onMeetingInitStarted() {
+      Log.d(TAG, "onMeetingInitStarted")
+    }
 
-        override fun onMeetingRoomJoinCompleted(meeting: RealtimeKitClient) {
-          Log.d(TAG, "onMeetingRoomJoinCompleted")
-          showVideoCallUI()
-        }
+    override fun onMeetingRoomJoinCompleted(meeting: RealtimeKitClient) {
+      Log.d(TAG, "onMeetingRoomJoinCompleted")
+      showVideoCallUI()
+    }
 
-        override fun onMeetingRoomJoinFailed(error: MeetingError) {
-          Log.d(TAG, "onMeetingRoomJoinFailed -> ${error.message}")
-        }
+    override fun onMeetingRoomJoinFailed(error: MeetingError) {
+      Log.d(TAG, "onMeetingRoomJoinFailed -> ${error.message}")
+    }
 
-        override fun onMeetingRoomJoinStarted() {
-          Log.d(TAG, "onMeetingRoomJoinStarted")
-        }
+    override fun onMeetingRoomJoinStarted() {
+      Log.d(TAG, "onMeetingRoomJoinStarted")
+    }
 
-        override fun onMeetingEnded() {
-          Log.d(TAG, "onMeetingEnded")
-          /*
-           * Note: calling meeting.release is currently compulsory after getting onMeetingEnded callback.
-           * */
-          meeting?.release(onSuccess = { finish() }, onFailure = { finish() })
-        }
+    override fun onMeetingEnded() {
+      Log.d(TAG, "onMeetingEnded")/*
+         * Note: calling meeting.release is currently compulsory after getting onMeetingEnded callback.
+         * */
+      meeting?.release(onSuccess = { finish() }, onFailure = { finish() })
+    }
 
-        override fun onSocketConnectionUpdate(newState: SocketConnectionState) {
-          Log.d(TAG, "onSocketConnectionUpdate:$newState")
-          if (newState.socketState == SocketState.CONNECTED && newState.reconnected) {
-            onReconnectedToMeetingRoom()
-          } else if (newState.socketState == SocketState.RECONNECTING &&
-              newState.reconnectionAttempt == 0) {
-            onReconnectingToMeetingRoom()
-          } else if (newState.isReconnectionFailure) {
-            onMeetingRoomReconnectionFailed()
-          }
-        }
-
-        private fun onMeetingRoomReconnectionFailed() {
-          Log.d(TAG, "onMeetingRoomReconnectionFailed")
-          Toast.makeText(
-                  applicationContext,
-                  "Reconnection failed, Please try again later",
-                  Toast.LENGTH_SHORT)
-              .show()
-          /*
-           * Note: calling meeting.release is currently compulsory when closing the Activity after
-           * reconnection failure.
-           * */
-          meeting?.release(onSuccess = { finish() }, onFailure = { finish() })
-        }
-
-        private fun onReconnectedToMeetingRoom() {
-          Log.d(TAG, "onReconnectedToMeetingRoom")
-          Toast.makeText(applicationContext, "Connection restored", Toast.LENGTH_SHORT).show()
-        }
-
-        private fun onReconnectingToMeetingRoom() {
-          Log.d(TAG, "onReconnectingToMeetingRoom")
-          Toast.makeText(
-                  applicationContext, "Connection lost. Trying to reconnect...", Toast.LENGTH_SHORT)
-              .show()
-          showProgressBar()
-          disableCallControls()
-        }
+    override fun onSocketConnectionUpdate(newState: SocketConnectionState) {
+      Log.d(TAG, "onSocketConnectionUpdate:$newState")
+      if (newState.socketState == SocketState.CONNECTED && newState.reconnected) {
+        onReconnectedToMeetingRoom()
+      } else if (newState.socketState == SocketState.RECONNECTING && newState.reconnectionAttempt == 0) {
+        onReconnectingToMeetingRoom()
+      } else if (newState.isReconnectionFailure) {
+        onMeetingRoomReconnectionFailed()
       }
+    }
 
-  private val localUserEventsListener =
-      object : RtkSelfEventListener {
-        override fun onVideoUpdate(isEnabled: Boolean) {
-          meeting?.localUser?.let { refreshLocalUserVideo(it) }
-          cameraToggleButton.isEnabled = true
-        }
+    private fun onMeetingRoomReconnectionFailed() {
+      Log.d(TAG, "onMeetingRoomReconnectionFailed")
+      Toast.makeText(
+        applicationContext, "Reconnection failed, Please try again later", Toast.LENGTH_SHORT
+      ).show()/*
+         * Note: calling meeting.release is currently compulsory when closing the Activity after
+         * reconnection failure.
+         * */
+      meeting?.release(onSuccess = { finish() }, onFailure = { finish() })
+    }
+
+    private fun onReconnectedToMeetingRoom() {
+      Log.d(TAG, "onReconnectedToMeetingRoom")
+      Toast.makeText(applicationContext, "Connection restored", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun onReconnectingToMeetingRoom() {
+      Log.d(TAG, "onReconnectingToMeetingRoom")
+      Toast.makeText(
+        applicationContext, "Connection lost. Trying to reconnect...", Toast.LENGTH_SHORT
+      ).show()
+      showProgressBar()
+      disableCallControls()
+    }
+  }
+
+  private val localUserEventsListener = object : RtkSelfEventListener {
+    override fun onVideoUpdate(isEnabled: Boolean) {
+      meeting?.localUser?.let { refreshLocalUserVideo(it) }
+      binding.buttonCameraToggle.isEnabled = true
+    }
+  }
+
+  private val remoteUserUpdateListener = object : RtkParticipantUpdateListener {
+    override fun onVideoUpdate(participant: RtkMeetingParticipant, isEnabled: Boolean) {
+      if (participant.id == remoteUser?.id) {
+        refreshRemoteUserVideo(participant as RtkRemoteParticipant)
       }
+    }
+  }
 
-  private val remoteUserUpdateListener =
-      object : RtkParticipantUpdateListener {
-        override fun onVideoUpdate(participant: RtkMeetingParticipant, isEnabled: Boolean) {
-          if (participant.id == remoteUser?.id) {
-            refreshRemoteUserVideo(participant as RtkRemoteParticipant)
-          }
-        }
+  private val participantsEventListener = object : RtkParticipantsEventListener {
+    override fun onParticipantJoin(participant: RtkRemoteParticipant) {
+      Log.d(TAG, "onParticipantJoin, ${participant.name}")
+    }
+
+    override fun onParticipantLeave(participant: RtkRemoteParticipant) {
+      Log.d(TAG, "onParticipantLeave, ${participant.name}")
+    }
+
+    override fun onActiveParticipantsChanged(active: List<RtkRemoteParticipant>) {
+      Log.d(TAG, "onActiveParticipantsChanged, ${active.map { it.name }}")/*
+         * Select the current remote user from active participants, ignoring any old instance
+         * if the user reconnected after a network issue.
+         * */
+      val remoteUser = active.firstOrNull { it.id != this@MainActivity.remoteUser?.id } ?: run {
+        Log.d(
+          TAG,
+          "onActiveParticipantsChanged, remote user is either already rendered or hasn't joined the call yet"
+        )
+        return
       }
-
-  private val participantsEventListener =
-      object : RtkParticipantsEventListener {
-        override fun onParticipantJoin(participant: RtkRemoteParticipant) {
-          Log.d(TAG, "onParticipantJoin, ${participant.name}")
-        }
-
-        override fun onParticipantLeave(participant: RtkRemoteParticipant) {
-          Log.d(TAG, "onParticipantLeave, ${participant.name}")
-        }
-
-        override fun onActiveParticipantsChanged(active: List<RtkRemoteParticipant>) {
-          Log.d(TAG, "onActiveParticipantsChanged, ${active.map { it.name }}")
-          /*
-           * Select the current remote user from active participants, ignoring any old instance
-           * if the user reconnected after a network issue.
-           * */
-          val remoteUser =
-              active.firstOrNull { it.id != this@MainActivity.remoteUser?.id }
-                  ?: run {
-                    Log.d(
-                        TAG,
-                        "onActiveParticipantsChanged, remote user is either already rendered or hasn't joined the call yet")
-                    return
-                  }
-          setUpRemoteUser(remoteUser)
-        }
-      }
+      setUpRemoteUser(remoteUser)
+    }
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-    initChildViews()
+    _binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+    setupUi()
     initMeetingClient()
   }
 
@@ -169,22 +156,21 @@ class MainActivity : AppCompatActivity() {
     meeting?.removeMeetingRoomEventListener(meetingRoomEventsListener)
     meeting?.removeSelfEventListener(localUserEventsListener)
     meeting?.removeParticipantsEventListener(participantsEventListener)
+    _binding = null
     super.onDestroy()
   }
 
-  private fun initChildViews() {
-    localUserVideoContainer = findViewById(R.id.framelayout_local_user_container)
-    remoteUserVideoContainer = findViewById(R.id.framelayout_remote_user_container)
-    progressBar = findViewById(R.id.progressbar_video_call)
-    callBottomBar = findViewById(R.id.linearlayout_bottom_bar)
-
-    cameraToggleButton = findViewById(R.id.button_camera_toggle)
-    cameraToggleButton.isEnabled = false
-    cameraToggleButton.setOnClickListener { meeting?.localUser?.let { onCameraToggleClicked(it) } }
-
-    endCallButton = findViewById(R.id.button_end_call)
-    endCallButton.isEnabled = false
-    endCallButton.setOnClickListener { meeting?.let { onEndCallClicked(it) } }
+  private fun setupUi() {
+    binding.buttonCameraToggle.isEnabled = false
+    binding.buttonCameraToggle.setOnClickListener {
+      meeting?.localUser?.let {
+        onCameraToggleClicked(
+          it
+        )
+      }
+    }
+    binding.buttonEndCall.isEnabled = false
+    binding.buttonEndCall.setOnClickListener { meeting?.let { onEndCallClicked(it) } }
   }
 
   private fun initMeetingClient() {
@@ -202,7 +188,7 @@ class MainActivity : AppCompatActivity() {
   private fun showVideoCallUI() {
     meeting?.localUser?.let { refreshLocalUserVideo(it) }
     hideProgressBar()
-    callBottomBar.isVisible = true
+    binding.linearlayoutBottomBar.isVisible = true
     enableCallControls()
   }
 
@@ -221,93 +207,93 @@ class MainActivity : AppCompatActivity() {
 
   private fun refreshRemoteUserVideo(remoteUser: RtkRemoteParticipant) {
     if (remoteUser.videoEnabled) {
-      remoteUserVideoContainer.removeAllViews()
+      binding.framelayoutRemoteUserContainer.removeAllViews()
       val videoView = remoteUser.getVideoView()
       (videoView?.parent as? ViewGroup)?.removeView(videoView)
-      remoteUserVideoContainer.addView(
-          videoView,
-          FrameLayout.LayoutParams(
-              FrameLayout.LayoutParams.WRAP_CONTENT,
-              FrameLayout.LayoutParams.WRAP_CONTENT,
-              Gravity.CENTER))
+      binding.framelayoutRemoteUserContainer.addView(
+        videoView, FrameLayout.LayoutParams(
+          FrameLayout.LayoutParams.WRAP_CONTENT,
+          FrameLayout.LayoutParams.WRAP_CONTENT,
+          Gravity.CENTER
+        )
+      )
       videoView?.renderVideo()
-      remoteUserVideoContainer.isVisible = true
+      binding.framelayoutRemoteUserContainer.isVisible = true
     } else {
-      remoteUserVideoContainer.removeAllViews()
-      remoteUserVideoContainer.isVisible = false
+      binding.framelayoutRemoteUserContainer.removeAllViews()
+      binding.framelayoutRemoteUserContainer.isVisible = false
     }
   }
 
   private fun refreshLocalUserVideo(localUser: RtkSelfParticipant) {
     if (localUser.videoEnabled) {
-      localUserVideoContainer.removeAllViews()
-      val videoView =
-          localUser.getSelfPreview()
-              ?: run {
-                Log.d(TAG, "refreshLocalUserVideo, VideoView is null even when video is enabled")
-                return
-              }
+      binding.framelayoutLocalUserContainer.removeAllViews()
+      val videoView = localUser.getSelfPreview() ?: run {
+        Log.d(TAG, "refreshLocalUserVideo, VideoView is null even when video is enabled")
+        return
+      }
       // Setting ZOrderMediaOverlay since local user's video is placed on top of remote user's video
       videoView.setZOrderMediaOverlay(true)
       (videoView.parent as? ViewGroup)?.removeView(videoView)
-      localUserVideoContainer.addView(
-          videoView,
-          FrameLayout.LayoutParams(
-              FrameLayout.LayoutParams.WRAP_CONTENT,
-              FrameLayout.LayoutParams.WRAP_CONTENT,
-              Gravity.CENTER))
+      binding.framelayoutLocalUserContainer.addView(
+        videoView, FrameLayout.LayoutParams(
+          FrameLayout.LayoutParams.WRAP_CONTENT,
+          FrameLayout.LayoutParams.WRAP_CONTENT,
+          Gravity.CENTER
+        )
+      )
       videoView.renderVideo()
-      localUserVideoContainer.isVisible = true
+      binding.framelayoutLocalUserContainer.isVisible = true
     } else {
-      localUserVideoContainer.removeAllViews()
-      localUserVideoContainer.isVisible = false
+      binding.framelayoutLocalUserContainer.removeAllViews()
+      binding.framelayoutLocalUserContainer.isVisible = false
     }
   }
 
   private fun onCameraToggleClicked(localUser: RtkSelfParticipant) {
-    cameraToggleButton.isEnabled = false
+    binding.buttonCameraToggle.isEnabled = false
     if (!localUser.videoEnabled) {
       localUser.enableVideo { error ->
         if (error != null) {
           Log.d(TAG, "enableVideo, ${error.message}")
-          cameraToggleButton.isEnabled = true
+          binding.buttonCameraToggle.isEnabled = true
         }
       }
     } else {
       localUser.disableVideo { error ->
         if (error != null) {
           Log.d(TAG, "disableVideo, ${error.message}")
-          cameraToggleButton.isEnabled = true
+          binding.buttonCameraToggle.isEnabled = true
         }
       }
     }
   }
 
   private fun onEndCallClicked(meeting: RealtimeKitClient) {
-    endCallButton.isEnabled = false
+    binding.buttonEndCall.isEnabled = false
     val error = meeting.participants.kickAll()
     if (error != null) {
       Log.d(TAG, "endCall, ${error.message}")
-      endCallButton.isEnabled = true
+      binding.buttonEndCall.isEnabled = true
     }
   }
 
   private fun enableCallControls() {
-    cameraToggleButton.isEnabled = true
-    endCallButton.isEnabled = true
+    binding.buttonCameraToggle.isEnabled = true
+    binding.buttonEndCall.isEnabled = true
   }
 
   private fun disableCallControls() {
-    cameraToggleButton.isEnabled = false
-    endCallButton.isEnabled = false
+    binding.buttonCameraToggle.isEnabled = false
+    binding.buttonEndCall.isEnabled = false
   }
 
   private fun showProgressBar() {
-    progressBar.isVisible = true
+    binding.progressbarVideoCall.isVisible = true
   }
 
   private fun hideProgressBar() {
-    progressBar.isVisible = false
+    binding.progressbarVideoCall.isVisible = false
   }
 
   companion object {
