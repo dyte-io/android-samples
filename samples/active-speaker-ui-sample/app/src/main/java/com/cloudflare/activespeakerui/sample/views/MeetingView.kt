@@ -183,7 +183,7 @@ class MeetingView : ConstraintLayout {
       dptvFloting.activate(presenter)
     } else if (self.stageStatus == StageStatus.ON_STAGE) {
       dptvFloting.visible()
-      dptvFloting.activateForSelfPreview(self)
+      dptvFloting.activate(self)
     } else {
       dptvFloting.gone()
     }
