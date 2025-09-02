@@ -3,8 +3,6 @@ package com.cloudflare.activespeakerui.sample.widget
 import android.content.Context
 import android.util.AttributeSet
 import com.cloudflare.activespeakerui.sample.R
-import com.cloudflare.activespeakerui.sample.utils.ParticipantUtils.canJoinStage
-import com.cloudflare.activespeakerui.sample.utils.ParticipantUtils.canRequestToJoinStage
 import com.cloudflare.activespeakerui.sample.widget.RaiseHandButtonState.AllowedToJoin
 import com.cloudflare.activespeakerui.sample.widget.RaiseHandButtonState.CanRequestToJoin
 import com.cloudflare.activespeakerui.sample.widget.RaiseHandButtonState.CancellingRequest

@@ -80,7 +80,7 @@ class JoinStageConfirmationDialog(
 
   fun activate(meeting: RealtimeKitClient) {
     this.meeting = meeting
-    participantPreviewTile.activateForSelfPreview(meeting.localUser)
+    participantPreviewTile.activate(meeting.localUser)
     micToggleButton.activate(meeting)
     cameraToggleButton.activate(meeting)
     meeting.addStageEventListener(stageStatusUpdateListener)
