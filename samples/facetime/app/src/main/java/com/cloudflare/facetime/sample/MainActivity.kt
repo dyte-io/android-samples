@@ -27,8 +27,7 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    val meetingInfo =
-      RtkMeetingInfo(baseDomain = MeetingConfig.BASE_DOMAIN, authToken = MeetingConfig.AUTH_TOKEN)
+    val meetingInfo = RtkMeetingInfo(authToken = MeetingConfig.AUTH_TOKEN)
     RealtimeKitUIBuilder.build(RealtimeKitUIInfo(activity = this, rtkMeetingInfo = meetingInfo))
 
     viewModel.stateLiveData.observe(this) {
